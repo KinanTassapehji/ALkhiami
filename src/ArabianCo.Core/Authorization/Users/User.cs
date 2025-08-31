@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Abp.Authorization.Users;
 using Abp.Extensions;
 
@@ -8,6 +9,10 @@ namespace ArabianCo.Authorization.Users
     public class User : AbpUser<User>
     {
         public const string DefaultPassword = "123qwe";
+
+        [Required]
+        [StringLength(AbpUserBase.MaxPhoneNumberLength)]
+        public override string PhoneNumber { get; set; }
 
         public static string CreateRandomPassword()
         {
