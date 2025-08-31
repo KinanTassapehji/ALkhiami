@@ -17,7 +17,8 @@ public class Enum
         MaintenanceRequests = 5,
         AboutUs = 6,
         CategoryIcon = 7,
-        ACInstall = 8
+        ACInstall = 8,
+        OurProjects = 9
     }
     public enum AttachmentType : byte
     {

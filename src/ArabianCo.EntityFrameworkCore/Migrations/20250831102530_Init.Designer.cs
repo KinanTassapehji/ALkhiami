@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArabianCo.Migrations
 {
     [DbContext(typeof(ArabianCoDbContext))]
-    [Migration("20250827143040_remove-warranty-period-check")]
-    partial class removewarrantyperiodcheck
+    [Migration("20250831102530_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2534,7 +2534,6 @@ namespace ArabianCo.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -2589,6 +2588,100 @@ namespace ArabianCo.Migrations
                     b.HasIndex("CityId");
 
                     b.ToTable("MaintenanceRequests");
+                });
+
+            modelBuilder.Entity("ArabianCo.Domain.OurProjects.OurProject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("System")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Ton_of_Refrigeration")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OurProjects");
+                });
+
+            modelBuilder.Entity("ArabianCo.Domain.OurProjects.OurProjectsTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CoreId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Language")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoreId");
+
+                    b.ToTable("OurProjectsTranslations");
                 });
 
             modelBuilder.Entity("ArabianCo.Domain.Products.Product", b =>
@@ -3257,6 +3350,17 @@ namespace ArabianCo.Migrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("ArabianCo.Domain.OurProjects.OurProjectsTranslation", b =>
+                {
+                    b.HasOne("ArabianCo.Domain.OurProjects.OurProject", "Core")
+                        .WithMany("Translations")
+                        .HasForeignKey("CoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Core");
+                });
+
             modelBuilder.Entity("ArabianCo.Domain.Products.Product", b =>
                 {
                     b.HasOne("ArabianCo.Domain.Brands.Brand", "Brand")
@@ -3445,6 +3549,11 @@ namespace ArabianCo.Migrations
                 });
 
             modelBuilder.Entity("ArabianCo.Domain.FrequentlyQuestions.FrequentlyQuestion", b =>
+                {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("ArabianCo.Domain.OurProjects.OurProject", b =>
                 {
                     b.Navigation("Translations");
                 });

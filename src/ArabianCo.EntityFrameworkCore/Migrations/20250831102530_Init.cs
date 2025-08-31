@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ArabianCo.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -596,6 +596,29 @@ namespace ArabianCo.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FrequentlyQuestions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OurProjects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    System = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ton_of_Refrigeration = table.Column<int>(type: "int", nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OurProjects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1201,6 +1224,35 @@ namespace ArabianCo.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OurProjectsTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CoreId = table.Column<int>(type: "int", nullable: false),
+                    Language = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OurProjectsTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OurProjectsTranslations_OurProjects_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "OurProjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AbpDynamicEntityPropertyValues",
                 columns: table => new
                 {
@@ -1449,6 +1501,61 @@ namespace ArabianCo.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ACInstalls",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    FullName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModelNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<byte>(type: "tinyint", nullable: false),
+                    AreaId = table.Column<int>(type: "int", nullable: true),
+                    BrandId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    OtherArea = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtherCity = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CityId = table.Column<int>(type: "int", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ACInstalls", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ACInstalls_Areas_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "Areas",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ACInstalls_Brands_BrandId",
+                        column: x => x.BrandId,
+                        principalTable: "Brands",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ACInstalls_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ACInstalls_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AreaTranslations",
                 columns: table => new
                 {
@@ -1482,7 +1589,7 @@ namespace ArabianCo.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -1890,6 +1997,26 @@ namespace ArabianCo.Migrations
                 column: "WebhookEventId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ACInstalls_AreaId",
+                table: "ACInstalls",
+                column: "AreaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ACInstalls_BrandId",
+                table: "ACInstalls",
+                column: "BrandId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ACInstalls_CategoryId",
+                table: "ACInstalls",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ACInstalls_CityId",
+                table: "ACInstalls",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Areas_CityId",
                 table: "Areas",
                 column: "CityId");
@@ -1978,6 +2105,11 @@ namespace ArabianCo.Migrations
                 name: "IX_MaintenanceRequests_CityId",
                 table: "MaintenanceRequests",
                 column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OurProjectsTranslations_CoreId",
+                table: "OurProjectsTranslations",
+                column: "CoreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
@@ -2083,6 +2215,9 @@ namespace ArabianCo.Migrations
                 name: "AbpWebhookSubscriptions");
 
             migrationBuilder.DropTable(
+                name: "ACInstalls");
+
+            migrationBuilder.DropTable(
                 name: "AreaTranslations");
 
             migrationBuilder.DropTable(
@@ -2116,6 +2251,9 @@ namespace ArabianCo.Migrations
                 name: "MaintenanceRequests");
 
             migrationBuilder.DropTable(
+                name: "OurProjectsTranslations");
+
+            migrationBuilder.DropTable(
                 name: "ProductTranslations");
 
             migrationBuilder.DropTable(
@@ -2147,6 +2285,9 @@ namespace ArabianCo.Migrations
 
             migrationBuilder.DropTable(
                 name: "Areas");
+
+            migrationBuilder.DropTable(
+                name: "OurProjects");
 
             migrationBuilder.DropTable(
                 name: "AbpDynamicProperties");
