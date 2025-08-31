@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ArabianCo.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -1366,13 +1366,15 @@ namespace ArabianCo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Areas",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CityId = table.Column<int>(type: "int", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Area = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OtherNotes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1383,9 +1385,9 @@ namespace ArabianCo.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Areas", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Areas_Cities_CityId",
+                        name: "FK_Addresses_Cities_CityId",
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
@@ -1449,14 +1451,21 @@ namespace ArabianCo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AreaTranslations",
+                name: "ACInstalls",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CoreId = table.Column<int>(type: "int", nullable: false),
-                    Language = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    FullName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModelNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<byte>(type: "tinyint", nullable: false),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    BrandId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1467,11 +1476,23 @@ namespace ArabianCo.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AreaTranslations", x => x.Id);
+                    table.PrimaryKey("PK_ACInstalls", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AreaTranslations_Areas_CoreId",
-                        column: x => x.CoreId,
-                        principalTable: "Areas",
+                        name: "FK_ACInstalls_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ACInstalls_Brands_BrandId",
+                        column: x => x.BrandId,
+                        principalTable: "Brands",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ACInstalls_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1482,21 +1503,17 @@ namespace ArabianCo.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModelNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Problem = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<byte>(type: "tinyint", nullable: false),
                     IsInWarrantyPeriod = table.Column<bool>(type: "bit", nullable: false),
-                    AreaId = table.Column<int>(type: "int", nullable: true),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
                     BrandId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    OtherArea = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OtherCity = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CityId = table.Column<int>(type: "int", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1509,10 +1526,11 @@ namespace ArabianCo.Migrations
                 {
                     table.PrimaryKey("PK_MaintenanceRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MaintenanceRequests_Areas_AreaId",
-                        column: x => x.AreaId,
-                        principalTable: "Areas",
-                        principalColumn: "Id");
+                        name: "FK_MaintenanceRequests_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MaintenanceRequests_Brands_BrandId",
                         column: x => x.BrandId,
@@ -1525,11 +1543,6 @@ namespace ArabianCo.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MaintenanceRequests_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -1890,14 +1903,24 @@ namespace ArabianCo.Migrations
                 column: "WebhookEventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Areas_CityId",
-                table: "Areas",
-                column: "CityId");
+                name: "IX_ACInstalls_AddressId",
+                table: "ACInstalls",
+                column: "AddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AreaTranslations_CoreId",
-                table: "AreaTranslations",
-                column: "CoreId");
+                name: "IX_ACInstalls_BrandId",
+                table: "ACInstalls",
+                column: "BrandId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ACInstalls_CategoryId",
+                table: "ACInstalls",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_CityId",
+                table: "Addresses",
+                column: "CityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AttributeCategory_CategoriesId",
@@ -1960,9 +1983,9 @@ namespace ArabianCo.Migrations
                 column: "CoreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MaintenanceRequests_AreaId",
+                name: "IX_MaintenanceRequests_AddressId",
                 table: "MaintenanceRequests",
-                column: "AreaId");
+                column: "AddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MaintenanceRequests_BrandId",
@@ -1973,11 +1996,6 @@ namespace ArabianCo.Migrations
                 name: "IX_MaintenanceRequests_CategoryId",
                 table: "MaintenanceRequests",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MaintenanceRequests_CityId",
-                table: "MaintenanceRequests",
-                column: "CityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
@@ -2083,7 +2101,7 @@ namespace ArabianCo.Migrations
                 name: "AbpWebhookSubscriptions");
 
             migrationBuilder.DropTable(
-                name: "AreaTranslations");
+                name: "ACInstalls");
 
             migrationBuilder.DropTable(
                 name: "Attachments");
@@ -2146,7 +2164,7 @@ namespace ArabianCo.Migrations
                 name: "FrequentlyQuestions");
 
             migrationBuilder.DropTable(
-                name: "Areas");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "AbpDynamicProperties");

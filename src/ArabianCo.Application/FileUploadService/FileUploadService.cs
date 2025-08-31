@@ -57,6 +57,13 @@ public class FileUploadService : IFileUploadService
 
         var fileName = GenerateUniqueFileName(file);
         var pathToSave = GetPathToSaveAttachment(fileName);
+
+		var directory = Path.GetDirectoryName(pathToSave);
+		if (!string.IsNullOrEmpty(directory))
+		{
+			Directory.CreateDirectory(directory);
+		}
+		
         using (var stream = new FileStream(pathToSave, FileMode.Create))
         {
             await file.CopyToAsync(stream);

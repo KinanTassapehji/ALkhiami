@@ -1581,19 +1581,13 @@ namespace ArabianCo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("AreaId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CityId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTime")
@@ -1632,12 +1626,6 @@ namespace ArabianCo.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OtherArea")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OtherCity")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(32)
@@ -1651,13 +1639,11 @@ namespace ArabianCo.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AreaId");
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CityId");
 
                     b.ToTable("ACInstalls");
                 });
@@ -1750,13 +1736,17 @@ namespace ArabianCo.Migrations
                     b.ToTable("AboutUsTranslations");
                 });
 
-            modelBuilder.Entity("ArabianCo.Domain.Areas.Area", b =>
+            modelBuilder.Entity("ArabianCo.Domain.Addresses.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Area")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CityId")
                         .HasColumnType("int");
@@ -1773,9 +1763,6 @@ namespace ArabianCo.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1784,57 +1771,19 @@ namespace ArabianCo.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("OtherNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Areas");
-                });
-
-            modelBuilder.Entity("ArabianCo.Domain.Areas.AreaTranslation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CoreId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CoreId");
-
-                    b.ToTable("AreaTranslations");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ArabianCo.Domain.Attachments.Attachment", b =>
@@ -2503,19 +2452,13 @@ namespace ArabianCo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("AreaId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CityId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTime")
@@ -2554,12 +2497,6 @@ namespace ArabianCo.Migrations
                     b.Property<string>("ModelNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OtherArea")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OtherCity")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(32)
@@ -2576,13 +2513,11 @@ namespace ArabianCo.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AreaId");
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CityId");
 
                     b.ToTable("MaintenanceRequests");
                 });
@@ -3044,9 +2979,11 @@ namespace ArabianCo.Migrations
 
             modelBuilder.Entity("ArabianCo.Domain.ACInstalls.ACInstall", b =>
                 {
-                    b.HasOne("ArabianCo.Domain.Areas.Area", "Area")
+                    b.HasOne("ArabianCo.Domain.Addresses.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AreaId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ArabianCo.Domain.Brands.Brand", "Brand")
                         .WithMany()
@@ -3060,17 +2997,11 @@ namespace ArabianCo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ArabianCo.Domain.Cities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
-
-                    b.Navigation("Area");
+                    b.Navigation("Address");
 
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
-
-                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("ArabianCo.Domain.AboutUss.AboutUsTranslation", b =>
@@ -3084,26 +3015,15 @@ namespace ArabianCo.Migrations
                     b.Navigation("Core");
                 });
 
-            modelBuilder.Entity("ArabianCo.Domain.Areas.Area", b =>
+            modelBuilder.Entity("ArabianCo.Domain.Addresses.Address", b =>
                 {
                     b.HasOne("ArabianCo.Domain.Cities.City", "City")
-                        .WithMany("Areas")
+                        .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("City");
-                });
-
-            modelBuilder.Entity("ArabianCo.Domain.Areas.AreaTranslation", b =>
-                {
-                    b.HasOne("ArabianCo.Domain.Areas.Area", "Core")
-                        .WithMany("Translations")
-                        .HasForeignKey("CoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Core");
                 });
 
             modelBuilder.Entity("ArabianCo.Domain.AttributeValues.AttributeValue", b =>
@@ -3224,9 +3144,11 @@ namespace ArabianCo.Migrations
 
             modelBuilder.Entity("ArabianCo.Domain.MaintenanceRequests.MaintenanceRequest", b =>
                 {
-                    b.HasOne("ArabianCo.Domain.Areas.Area", "Area")
+                    b.HasOne("ArabianCo.Domain.Addresses.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AreaId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ArabianCo.Domain.Brands.Brand", "Brand")
                         .WithMany()
@@ -3240,17 +3162,11 @@ namespace ArabianCo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ArabianCo.Domain.Cities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
-
-                    b.Navigation("Area");
+                    b.Navigation("Address");
 
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
-
-                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("ArabianCo.Domain.Products.Product", b =>
@@ -3401,11 +3317,6 @@ namespace ArabianCo.Migrations
                     b.Navigation("Translations");
                 });
 
-            modelBuilder.Entity("ArabianCo.Domain.Areas.Area", b =>
-                {
-                    b.Navigation("Translations");
-                });
-
             modelBuilder.Entity("ArabianCo.Domain.AttributeValues.AttributeValue", b =>
                 {
                     b.Navigation("Translations");
@@ -3428,8 +3339,6 @@ namespace ArabianCo.Migrations
 
             modelBuilder.Entity("ArabianCo.Domain.Cities.City", b =>
                 {
-                    b.Navigation("Areas");
-
                     b.Navigation("Translations");
                 });
 
