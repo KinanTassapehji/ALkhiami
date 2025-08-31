@@ -17,6 +17,7 @@ using ArabianCo.Domain.MaintenanceRequests;
 using ArabianCo.Domain.Questions;
 using ArabianCo.Domain.AboutUss;
 using ArabianCo.Domain.ACInstalls;
+using ArabianCo.Domain.OurProjects;
 
 namespace ArabianCo.EntityFrameworkCore
 {
@@ -57,5 +58,7 @@ namespace ArabianCo.EntityFrameworkCore
         public virtual DbSet<Question> Questions {  get; set; }
         public virtual DbSet<AboutUs> AboutUss {  get; set; }
         public virtual DbSet<AboutUsTranslation> AboutUsTranslations {  get; set; }
+		public virtual DbSet<OurProject> OurProjects { get; set; }
+		public virtual DbSet<OurProjectsTranslation> OurProjectsTranslations {  get; set; }
     }
 }
