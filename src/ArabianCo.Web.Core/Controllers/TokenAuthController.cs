@@ -53,7 +53,7 @@ namespace ArabianCo.Controllers
         public async Task<AuthenticateResultModel> Authenticate([FromBody] AuthenticateModel model)
         {
             var loginResult = await GetLoginResultAsync(
-                model.UserNameOrEmailAddress,
+                model.UserNameOrPhoneNumber,
                 model.Password,
                 GetTenancyNameOrNull()
             );
@@ -142,6 +142,7 @@ namespace ArabianCo.Controllers
                 externalUser.Name,
                 externalUser.Surname,
                 externalUser.EmailAddress,
+                externalUser.PhoneNumber,
                 externalUser.EmailAddress,
                 Authorization.Users.User.CreateRandomPassword(),
                 true
@@ -183,16 +184,16 @@ namespace ArabianCo.Controllers
             return _tenantCache.GetOrNull(AbpSession.TenantId.Value)?.TenancyName;
         }
 
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrPhoneNumber, string password, string tenancyName)
         {
-            var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName);
+            var loginResult = await _logInManager.LoginAsync(usernameOrPhoneNumber, password, tenancyName);
 
             switch (loginResult.Result)
             {
                 case AbpLoginResultType.Success:
                     return loginResult;
                 default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrEmailAddress, tenancyName);
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrPhoneNumber, tenancyName);
             }
         }
 

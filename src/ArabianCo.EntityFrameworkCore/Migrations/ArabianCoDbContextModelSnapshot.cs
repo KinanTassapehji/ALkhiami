@@ -1478,7 +1478,6 @@ namespace ArabianCo.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EmailAddress")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -1519,7 +1518,6 @@ namespace ArabianCo.Migrations
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("NormalizedEmailAddress")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -1538,6 +1536,7 @@ namespace ArabianCo.Migrations
                         .HasColumnType("nvarchar(328)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
 
@@ -1567,6 +1566,7 @@ namespace ArabianCo.Migrations
                     b.HasIndex("LastModifierUserId");
 
                     b.HasIndex("TenantId", "NormalizedEmailAddress");
+                    b.HasIndex("TenantId", "PhoneNumber");
 
                     b.HasIndex("TenantId", "NormalizedUserName");
 

@@ -34,9 +34,9 @@ var abp = abp || {};
     }
 
     function loginUserInternal(tenantId, callback) {
-        var usernameOrEmailAddress = document.getElementById('userName').value;
-        if (!usernameOrEmailAddress) {
-            alert('Username or Email Address is required, please try with a valid value !');
+        var userNameOrPhoneNumber = document.getElementById('userName').value;
+        if (!userNameOrPhoneNumber) {
+            alert('Username or phone number is required, please try with a valid value !');
             return false;
         }
 
@@ -68,7 +68,7 @@ var abp = abp || {};
         addAntiForgeryTokenToXhr(xhr);
         xhr.send(
             JSON.stringify(
-                { usernameOrEmailAddress: usernameOrEmailAddress, password: password }
+                { userNameOrPhoneNumber: userNameOrPhoneNumber, password: password }
             )
         );
     };

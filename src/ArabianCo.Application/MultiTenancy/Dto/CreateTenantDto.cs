@@ -17,9 +17,12 @@ namespace ArabianCo.MultiTenancy.Dto
         [StringLength(AbpTenantBase.MaxNameLength)]
         public string Name { get; set; }
 
-        [Required]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]
         public string AdminEmailAddress { get; set; }
+
+        [Required]
+        [StringLength(AbpUserBase.MaxPhoneNumberLength)]
+        public string AdminPhoneNumber { get; set; }
 
         [StringLength(AbpTenantBase.MaxConnectionStringLength)]
         public string ConnectionString { get; set; }

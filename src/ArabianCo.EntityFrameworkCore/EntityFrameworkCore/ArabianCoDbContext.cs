@@ -31,9 +31,18 @@ namespace ArabianCo.EntityFrameworkCore
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<AttributeValue>().HasOne(x => x.Product).WithMany(x => x.AttributeValues).HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Product>().HasMany(x=>x.AttributeValues).WithOne(x=>x.Product).OnDelete(DeleteBehavior.NoAction);
-            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>(b =>
+            {
+                b.Property(u => u.EmailAddress).IsRequired(false);
+                b.Property(u => u.NormalizedEmailAddress).IsRequired(false);
+                b.Property(u => u.PhoneNumber).IsRequired();
+                b.HasIndex(u => new { u.TenantId, u.PhoneNumber });
+            });
         }
         public virtual DbSet<Country> Countries {  get; set; }
         public virtual DbSet<CountryTranslation> CountryTranslations {  get; set; }

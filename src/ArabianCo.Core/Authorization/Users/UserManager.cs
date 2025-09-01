@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Abp.Authorization;
@@ -56,6 +58,17 @@ namespace ArabianCo.Authorization.Users
               settingManager,
               userLoginRepository)
         {
+        }
+
+        public override async Task<User> FindByNameOrEmailAsync(string userNameOrEmailAddress)
+        {
+            var user = await base.FindByNameOrEmailAsync(userNameOrEmailAddress);
+            if (user == null)
+            {
+                user = await Users.FirstOrDefaultAsync(u => u.PhoneNumber == userNameOrEmailAddress);
+            }
+
+            return user;
         }
     }
 }

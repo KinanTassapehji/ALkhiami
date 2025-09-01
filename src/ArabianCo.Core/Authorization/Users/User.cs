@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Abp.Authorization.Users;
 using Abp.Extensions;
 
@@ -14,7 +15,7 @@ namespace ArabianCo.Authorization.Users
             return Guid.NewGuid().ToString("N").Truncate(16);
         }
 
-        public static User CreateTenantAdminUser(int tenantId, string emailAddress)
+        public static User CreateTenantAdminUser(int tenantId, string emailAddress, string phoneNumber)
         {
             var user = new User
             {
@@ -23,6 +24,7 @@ namespace ArabianCo.Authorization.Users
                 Name = AdminUserName,
                 Surname = AdminUserName,
                 EmailAddress = emailAddress,
+                PhoneNumber = phoneNumber,
                 Roles = new List<UserRole>()
             };
 
@@ -30,5 +32,13 @@ namespace ArabianCo.Authorization.Users
 
             return user;
         }
+
+        [Required]
+        [StringLength(AbpUserBase.MaxPhoneNumberLength)]
+        public override string PhoneNumber { get; set; }
+
+        [EmailAddress]
+        [StringLength(AbpUserBase.MaxEmailAddressLength)]
+        public override string EmailAddress { get; set; }
     }
 }
