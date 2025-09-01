@@ -599,6 +599,29 @@ namespace ArabianCo.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OurProjects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    System = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ton_of_Refrigeration = table.Column<int>(type: "int", nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OurProjects", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Questions",
                 columns: table => new
                 {
@@ -1196,6 +1219,35 @@ namespace ArabianCo.Migrations
                         name: "FK_FrequentlyQuestionTranslations_FrequentlyQuestions_CoreId",
                         column: x => x.CoreId,
                         principalTable: "FrequentlyQuestions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OurProjectsTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CoreId = table.Column<int>(type: "int", nullable: false),
+                    Language = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeleterUserId = table.Column<long>(type: "bigint", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OurProjectsTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OurProjectsTranslations_OurProjects_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "OurProjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1998,6 +2050,11 @@ namespace ArabianCo.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OurProjectsTranslations_CoreId",
+                table: "OurProjectsTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
                 table: "Products",
                 column: "BrandId");
@@ -2134,6 +2191,9 @@ namespace ArabianCo.Migrations
                 name: "MaintenanceRequests");
 
             migrationBuilder.DropTable(
+                name: "OurProjectsTranslations");
+
+            migrationBuilder.DropTable(
                 name: "ProductTranslations");
 
             migrationBuilder.DropTable(
@@ -2165,6 +2225,9 @@ namespace ArabianCo.Migrations
 
             migrationBuilder.DropTable(
                 name: "Addresses");
+
+            migrationBuilder.DropTable(
+                name: "OurProjects");
 
             migrationBuilder.DropTable(
                 name: "AbpDynamicProperties");
