@@ -26,7 +26,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ArabianCo.Users
 {
     [AbpAuthorize(PermissionNames.Pages_Users)]
-    internal class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
+    public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
     {
         private readonly UserManager _userManager;
         private readonly RoleManager _roleManager;
@@ -60,7 +60,7 @@ namespace ArabianCo.Users
             var user = ObjectMapper.Map<User>(input);
 
             user.TenantId = AbpSession.TenantId;
-            user.IsEmailConfirmed = true;
+            user.IsEmailConfirmed = false;
 
             await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 

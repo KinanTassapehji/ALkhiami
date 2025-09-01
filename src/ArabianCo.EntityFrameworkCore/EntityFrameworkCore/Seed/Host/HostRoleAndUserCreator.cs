@@ -77,6 +77,7 @@ namespace ArabianCo.EntityFrameworkCore.Seed.Host
                     Name = "admin",
                     Surname = "admin",
                     EmailAddress = "admin@aspnetboilerplate.com",
+                    PhoneNumber = "0545454545",
                     IsEmailConfirmed = true,
                     IsActive = true
                 };
