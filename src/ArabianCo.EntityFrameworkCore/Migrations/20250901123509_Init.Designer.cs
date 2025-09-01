@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArabianCo.Migrations
 {
     [DbContext(typeof(ArabianCoDbContext))]
-    [Migration("20250901102922_Init")]
+    [Migration("20250901123509_Init")]
     partial class Init
     {
         /// <inheritdoc />
