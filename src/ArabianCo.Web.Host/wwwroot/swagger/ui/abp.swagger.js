@@ -34,9 +34,9 @@ var abp = abp || {};
     }
 
     function loginUserInternal(tenantId, callback) {
-        var usernameOrEmailAddress = document.getElementById('userName').value;
-        if (!usernameOrEmailAddress) {
-            alert('Username or Email Address is required, please try with a valid value !');
+        var userNameOrPhoneNumber = document.getElementById('userName').value;
+        if (!userNameOrPhoneNumber) {
+            alert('Phone number or username is required, please try with a valid value !');
             return false;
         }
 
@@ -68,7 +68,7 @@ var abp = abp || {};
         addAntiForgeryTokenToXhr(xhr);
         xhr.send(
             JSON.stringify(
-                { usernameOrEmailAddress: usernameOrEmailAddress, password: password }
+                { userNameOrPhoneNumber: userNameOrPhoneNumber, password: password }
             )
         );
     };
@@ -164,7 +164,7 @@ var abp = abp || {};
 
         //Inputs
         createInput(modalUxContent, 'tenancyName', 'Tenancy Name (Leave empty for Host)');
-        createInput(modalUxContent, 'userName', 'Username or email address');
+        createInput(modalUxContent, 'userName', 'Phone number or username');
         createInput(modalUxContent, 'password', 'Password', 'password');
 
         //Buttons

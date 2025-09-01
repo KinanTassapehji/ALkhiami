@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
@@ -30,6 +31,7 @@ namespace ArabianCo.Controllers
         private readonly IExternalAuthConfiguration _externalAuthConfiguration;
         private readonly IExternalAuthManager _externalAuthManager;
         private readonly UserRegistrationManager _userRegistrationManager;
+        private readonly UserManager _userManager;
 
         public TokenAuthController(
             LogInManager logInManager,
@@ -38,7 +40,8 @@ namespace ArabianCo.Controllers
             TokenAuthConfiguration configuration,
             IExternalAuthConfiguration externalAuthConfiguration,
             IExternalAuthManager externalAuthManager,
-            UserRegistrationManager userRegistrationManager)
+            UserRegistrationManager userRegistrationManager,
+            UserManager userManager)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -47,13 +50,14 @@ namespace ArabianCo.Controllers
             _externalAuthConfiguration = externalAuthConfiguration;
             _externalAuthManager = externalAuthManager;
             _userRegistrationManager = userRegistrationManager;
+            _userManager = userManager;
         }
 
         [HttpPost]
         public async Task<AuthenticateResultModel> Authenticate([FromBody] AuthenticateModel model)
         {
             var loginResult = await GetLoginResultAsync(
-                model.UserNameOrEmailAddress,
+                model.UserNameOrPhoneNumber,
                 model.Password,
                 GetTenancyNameOrNull()
             );
@@ -142,6 +146,7 @@ namespace ArabianCo.Controllers
                 externalUser.Name,
                 externalUser.Surname,
                 externalUser.EmailAddress,
+                string.Empty,
                 externalUser.EmailAddress,
                 Authorization.Users.User.CreateRandomPassword(),
                 true
@@ -183,16 +188,25 @@ namespace ArabianCo.Controllers
             return _tenantCache.GetOrNull(AbpSession.TenantId.Value)?.TenancyName;
         }
 
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrPhoneNumber, string password, string tenancyName)
         {
-            var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName);
+            var loginResult = await _logInManager.LoginAsync(usernameOrPhoneNumber, password, tenancyName);
+
+            if (loginResult.Result == AbpLoginResultType.InvalidUserNameOrEmailAddress)
+            {
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == usernameOrPhoneNumber);
+                if (user != null)
+                {
+                    loginResult = await _logInManager.LoginAsync(user.UserName, password, tenancyName);
+                }
+            }
 
             switch (loginResult.Result)
             {
                 case AbpLoginResultType.Success:
                     return loginResult;
                 default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrEmailAddress, tenancyName);
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrPhoneNumber, tenancyName);
             }
         }
 

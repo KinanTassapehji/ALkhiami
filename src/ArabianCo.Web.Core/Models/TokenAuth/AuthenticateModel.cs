@@ -7,8 +7,8 @@ namespace ArabianCo.Models.TokenAuth
     public class AuthenticateModel
     {
         [Required]
-        [StringLength(AbpUserBase.MaxEmailAddressLength)]
-        public string UserNameOrEmailAddress { get; set; }
+        [StringLength(AbpUserBase.MaxUserNameLength)]
+        public string UserNameOrPhoneNumber { get; set; }
 
         [Required]
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]

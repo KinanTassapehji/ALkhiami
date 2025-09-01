@@ -41,6 +41,7 @@ namespace ArabianCo.Authorization.Accounts
                 input.Name,
                 input.Surname,
                 input.EmailAddress,
+                input.PhoneNumber,
                 input.UserName,
                 input.Password,
                 true // Assumed email address is always confirmed. Change this if you want to implement email confirmation.

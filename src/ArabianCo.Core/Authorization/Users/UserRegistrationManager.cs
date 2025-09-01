@@ -37,7 +37,7 @@ namespace ArabianCo.Authorization.Users
             AbpSession = NullAbpSession.Instance;
         }
 
-        public async Task<User> RegisterAsync(string name, string surname, string emailAddress, string userName, string plainPassword, bool isEmailConfirmed)
+        public async Task<User> RegisterAsync(string name, string surname, string emailAddress, string phoneNumber, string userName, string plainPassword, bool isEmailConfirmed)
         {
             CheckForTenant();
 
@@ -49,6 +49,7 @@ namespace ArabianCo.Authorization.Users
                 Name = name,
                 Surname = surname,
                 EmailAddress = emailAddress,
+                PhoneNumber = phoneNumber,
                 IsActive = true,
                 UserName = userName,
                 IsEmailConfirmed = isEmailConfirmed,

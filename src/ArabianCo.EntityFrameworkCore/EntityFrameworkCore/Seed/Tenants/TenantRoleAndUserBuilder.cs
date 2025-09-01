@@ -74,6 +74,8 @@ namespace ArabianCo.EntityFrameworkCore.Seed.Tenants
             {
                 adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
                 adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
+                adminUser.PhoneNumber = "+10000000000";
+                adminUser.IsPhoneNumberConfirmed = true;
                 adminUser.IsEmailConfirmed = true;
                 adminUser.IsActive = true;
 

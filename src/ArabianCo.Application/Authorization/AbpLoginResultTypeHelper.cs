@@ -13,7 +13,7 @@ namespace ArabianCo.Authorization
             LocalizationSourceName = ArabianCoConsts.LocalizationSourceName;
         }
 
-        public Exception CreateExceptionForFailedLoginAttempt(AbpLoginResultType result, string usernameOrEmailAddress, string tenancyName)
+        public Exception CreateExceptionForFailedLoginAttempt(AbpLoginResultType result, string usernameOrPhoneNumber, string tenancyName)
         {
             switch (result)
             {
@@ -27,7 +27,7 @@ namespace ArabianCo.Authorization
                 case AbpLoginResultType.TenantIsNotActive:
                     return new UserFriendlyException(L("LoginFailed"), L("TenantIsNotActive", tenancyName));
                 case AbpLoginResultType.UserIsNotActive:
-                    return new UserFriendlyException(L("LoginFailed"), L("UserIsNotActiveAndCanNotLogin", usernameOrEmailAddress));
+                    return new UserFriendlyException(L("LoginFailed"), L("UserIsNotActiveAndCanNotLogin", usernameOrPhoneNumber));
                 case AbpLoginResultType.UserEmailIsNotConfirmed:
                     return new UserFriendlyException(L("LoginFailed"), L("UserEmailIsNotConfirmedAndCanNotLogin"));
                 case AbpLoginResultType.LockedOut:
@@ -38,7 +38,7 @@ namespace ArabianCo.Authorization
             }
         }
 
-        public string CreateLocalizedMessageForFailedLoginAttempt(AbpLoginResultType result, string usernameOrEmailAddress, string tenancyName)
+        public string CreateLocalizedMessageForFailedLoginAttempt(AbpLoginResultType result, string usernameOrPhoneNumber, string tenancyName)
         {
             switch (result)
             {
@@ -52,7 +52,7 @@ namespace ArabianCo.Authorization
                 case AbpLoginResultType.TenantIsNotActive:
                     return L("TenantIsNotActive", tenancyName);
                 case AbpLoginResultType.UserIsNotActive:
-                    return L("UserIsNotActiveAndCanNotLogin", usernameOrEmailAddress);
+                    return L("UserIsNotActiveAndCanNotLogin", usernameOrPhoneNumber);
                 case AbpLoginResultType.UserEmailIsNotConfirmed:
                     return L("UserEmailIsNotConfirmedAndCanNotLogin");
                 default: // Can not fall to default actually. But other result types can be added in the future and we may forget to handle it
