@@ -144,7 +144,8 @@ namespace ArabianCo.Controllers
                 externalUser.EmailAddress,
                 externalUser.EmailAddress,
                 Authorization.Users.User.CreateRandomPassword(),
-                true
+                true,
+                externalUser.PhoneNumber
             );
 
             user.Logins = new List<UserLogin>

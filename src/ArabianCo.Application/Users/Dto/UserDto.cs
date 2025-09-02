@@ -17,8 +17,11 @@ namespace ArabianCo.Users.Dto
         [Required]
         [StringLength(AbpUserBase.MaxNameLength)]
         public string Name { get; set; }
+		[Required]
+		[StringLength(AbpUserBase.MaxPhoneNumberLength)]
+		public string PhoneNumber { get; set; }
 
-        [Required]
+		[Required]
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string Surname { get; set; }
 

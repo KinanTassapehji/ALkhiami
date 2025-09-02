@@ -1,20 +1,20 @@
 ﻿// File: Authorization/Users/User.cs
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Abp.Authorization.Users;
 using Abp.Extensions;
 using ArabianCo.Domain.Orders;
 
 namespace ArabianCo.Authorization.Users
 {
-	public class User : AbpUser<User>
-	{
-		public const string DefaultPassword = "123qwe";
-
-		public static string CreateRandomPassword()
-			=> Guid.NewGuid().ToString("N").Truncate(16);
-
-		public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public class User : AbpUser<User>
+    {
+        public const string DefaultPassword = "123qwe";
+        public static string CreateRandomPassword()
+        {
+            return Guid.NewGuid().ToString("N").Truncate(16);
+        }
 
 		// (Optional, existing template method – safe to keep even if not using tenants)
 		public static User CreateTenantAdminUser(int tenantId, string emailAddress)

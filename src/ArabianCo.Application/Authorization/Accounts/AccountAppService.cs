@@ -6,7 +6,7 @@ using ArabianCo.Authorization.Users;
 
 namespace ArabianCo.Authorization.Accounts
 {
-    internal class AccountAppService : ArabianCoAppServiceBase, IAccountAppService
+    public class AccountAppService : ArabianCoAppServiceBase, IAccountAppService
     {
         // from: http://regexlib.com/REDetails.aspx?regexp_id=1923
         public const string PasswordRegex = "(?=^.{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s)[0-9a-zA-Z!@#$%^&*()]*$";
@@ -43,8 +43,9 @@ namespace ArabianCo.Authorization.Accounts
                 input.EmailAddress,
                 input.UserName,
                 input.Password,
-                true // Assumed email address is always confirmed. Change this if you want to implement email confirmation.
-            );
+                true,// Assumed email address is always confirmed. Change this if you want to implement email confirmation.
+                input.PhoneNumber
+                );
 
             var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
 
