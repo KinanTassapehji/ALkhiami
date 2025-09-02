@@ -5,7 +5,7 @@ using ArabianCo.Roles.Dto;
 
 namespace ArabianCo.Roles
 {
-    internal interface IRoleAppService : IAsyncCrudAppService<RoleDto, int, PagedRoleResultRequestDto, CreateRoleDto, RoleDto>
+    public interface IRoleAppService : IAsyncCrudAppService<RoleDto, int, PagedRoleResultRequestDto, CreateRoleDto, RoleDto>
     {
         Task<ListResultDto<PermissionDto>> GetAllPermissions();
 

@@ -35,13 +35,22 @@ namespace ArabianCo.EntityFrameworkCore.Seed.Tenants
             var adminRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Admin);
             if (adminRole == null)
             {
-                adminRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin) { IsStatic = true }).Entity;
+                adminRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin) { IsStatic = true, IsDefault = false }).Entity;
                 _context.SaveChanges();
             }
 
-            // Grant all permissions to admin role
+			// User role
 
-            var grantedPermissions = _context.Permissions.IgnoreQueryFilters()
+			var userRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.User);
+			if (userRole == null)
+			{
+				userRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.User, StaticRoleNames.Tenants.User) { IsStatic = true, IsDefault = true }).Entity;
+				_context.SaveChanges();
+			}
+
+			// Grant all permissions to admin role
+
+			var grantedPermissions = _context.Permissions.IgnoreQueryFilters()
                 .OfType<RolePermissionSetting>()
                 .Where(p => p.TenantId == _tenantId && p.RoleId == adminRole.Id)
                 .Select(p => p.Name)
@@ -76,6 +85,7 @@ namespace ArabianCo.EntityFrameworkCore.Seed.Tenants
                 adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
                 adminUser.IsEmailConfirmed = true;
                 adminUser.IsActive = true;
+                adminUser.PhoneNumber = "0888888888";
 
                 _context.Users.Add(adminUser);
                 _context.SaveChanges();

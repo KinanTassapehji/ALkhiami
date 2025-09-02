@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ArabianCo.Roles
 {
     [AbpAuthorize(PermissionNames.Pages_Roles)]
-    internal class RoleAppService : AsyncCrudAppService<Role, RoleDto, int, PagedRoleResultRequestDto, CreateRoleDto, RoleDto>, IRoleAppService
+    public class RoleAppService : AsyncCrudAppService<Role, RoleDto, int, PagedRoleResultRequestDto, CreateRoleDto, RoleDto>, IRoleAppService
     {
         private readonly RoleManager _roleManager;
         private readonly UserManager _userManager;

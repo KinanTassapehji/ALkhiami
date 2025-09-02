@@ -26,7 +26,10 @@ namespace ArabianCo.Users.Dto
         [EmailAddress]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]
         public string EmailAddress { get; set; }
-        public bool IsActive { get; set; }
+		[Required]
+		[StringLength(AbpUserBase.MaxPhoneNumberLength)]
+		public string PhoneNumber { get; set; }
+		public bool IsActive { get; set; }
 
         public string[] RoleNames { get; set; }
 
