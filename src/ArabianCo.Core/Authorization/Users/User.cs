@@ -16,7 +16,7 @@ namespace ArabianCo.Authorization.Users
             return Guid.NewGuid().ToString("N").Truncate(16);
         }
 
-        public static User CreateTenantAdminUser(int tenantId, string emailAddress, string phoneNumber)
+        public static User CreateTenantAdminUser(int tenantId, string emailAddress)
         {
             var user = new User
             {
@@ -25,7 +25,6 @@ namespace ArabianCo.Authorization.Users
                 Name = AdminUserName,
                 Surname = AdminUserName,
                 EmailAddress = emailAddress,
-                PhoneNumber = phoneNumber,
                 Roles = new List<UserRole>()
             };
 

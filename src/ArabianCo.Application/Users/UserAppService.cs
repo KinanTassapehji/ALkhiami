@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Entities;
@@ -22,11 +17,17 @@ using ArabianCo.Roles.Dto;
 using ArabianCo.Users.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace ArabianCo.Users
 {
     [AbpAuthorize(PermissionNames.Pages_Users)]
-    public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
+    public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UpdateUserDto>, IUserAppService
     {
         private readonly UserManager _userManager;
         private readonly RoleManager _roleManager;
@@ -61,8 +62,10 @@ namespace ArabianCo.Users
 
             user.TenantId = AbpSession.TenantId;
             user.IsEmailConfirmed = false;
+            user.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(user, input.Password);
 
-            await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
+
+			await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
             CheckErrors(await _userManager.CreateAsync(user, input.Password));
 
@@ -76,7 +79,7 @@ namespace ArabianCo.Users
             return MapToEntityDto(user);
         }
 
-        public override async Task<UserDto> UpdateAsync(UserDto input)
+        public override async Task<UserDto> UpdateAsync(UpdateUserDto input)
         {
             CheckUpdatePermission();
 
@@ -140,7 +143,7 @@ namespace ArabianCo.Users
             return user;
         }
 
-        protected override void MapToEntity(UserDto input, User user)
+        protected override void MapToEntity(UpdateUserDto input, User user)
         {
             ObjectMapper.Map(input, user);
             user.SetNormalizedNames();
