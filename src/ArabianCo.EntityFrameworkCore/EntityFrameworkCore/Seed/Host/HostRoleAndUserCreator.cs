@@ -33,9 +33,19 @@ namespace ArabianCo.EntityFrameworkCore.Seed.Host
             var adminRoleForHost = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == null && r.Name == StaticRoleNames.Host.Admin);
             if (adminRoleForHost == null)
             {
-                adminRoleForHost = _context.Roles.Add(new Role(null, StaticRoleNames.Host.Admin, StaticRoleNames.Host.Admin) { IsStatic = true, IsDefault = true }).Entity;
-                _context.SaveChanges();
-            }
+				adminRoleForHost = _context.Roles.Add(new Role(null, StaticRoleNames.Host.Admin, StaticRoleNames.Host.Admin) { IsStatic = true, IsDefault = false }).Entity;
+				_context.SaveChanges();
+			}
+
+			// User role for host
+
+			var userRoleForHost = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == null && r.Name == StaticRoleNames.Host.User);
+			if (userRoleForHost == null)
+			{
+				userRoleForHost = _context.Roles.Add(new Role(null, StaticRoleNames.Host.User, StaticRoleNames.Host.User) { IsStatic = true, IsDefault = true }).Entity;
+				_context.SaveChanges();
+			}
+
 
             // Grant all permissions to admin role for host
 
