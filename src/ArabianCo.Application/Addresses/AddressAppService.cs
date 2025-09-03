@@ -24,6 +24,11 @@ namespace ArabianCo.Addresses
 
         public override async Task<AddressDto> CreateAsync(CreateAddressDto input)
         {
+            if (!input.UserId.HasValue && AbpSession.UserId.HasValue)
+            {
+                input.UserId = AbpSession.UserId.Value;
+            }
+
             return await base.CreateAsync(input);
         }
 
