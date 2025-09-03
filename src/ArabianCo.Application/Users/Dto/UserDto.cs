@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
 using Abp.Authorization.Users;
 using Abp.AutoMapper;
 using ArabianCo.Authorization.Users;
+using ArabianCo.Addresses.Dto;
 
 namespace ArabianCo.Users.Dto
 {
@@ -36,6 +38,8 @@ namespace ArabianCo.Users.Dto
         public DateTime? LastLoginTime { get; set; }
 
         public DateTime CreationTime { get; set; }
+
+        public List<AddressDto> Addresses { get; set; }
 
         public string[] RoleNames { get; set; }
     }
