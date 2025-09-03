@@ -60,29 +60,32 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
         }
 
         Address address;
-        if (!AbpSession.UserId.HasValue)
+        if (input.AddressId.HasValue)
+        {
+            if (!AbpSession.UserId.HasValue)
+            {
+                throw new UserFriendlyException("Login required to use an existing address");
+            }
+
+            address = await _addressRepository.FirstOrDefaultAsync(
+                a => a.Id == input.AddressId.Value && a.UserId == AbpSession.UserId);
+            if (address == null)
+            {
+                throw new UserFriendlyException("Invalid address");
+            }
+        }
+        else
         {
             address = new Address
             {
                 CityId = input.CityId,
                 Street = input.Street,
                 Area = input.Area,
-                OtherNotes = input.OtherNotes
+                OtherNotes = input.OtherNotes,
+                UserId = AbpSession.UserId
             };
             await _addressRepository.InsertAsync(address);
             await CurrentUnitOfWork.SaveChangesAsync();
-        }
-        else
-        {
-            if (!input.AddressId.HasValue)
-            {
-                throw new UserFriendlyException("AddressId is required");
-            }
-            address = await _addressRepository.FirstOrDefaultAsync(a => a.Id == input.AddressId.Value && a.UserId == AbpSession.UserId);
-            if (address == null)
-            {
-                throw new UserFriendlyException("Invalid address");
-            }
         }
 
         var entity = ObjectMapper.Map<MaintenanceRequest>(input);
