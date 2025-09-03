@@ -22,8 +22,7 @@ namespace ArabianCo.Domain.Addresses
 
         public string OtherNotes { get; set; }
 
-        [Required]
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public virtual User User { get; set; }
