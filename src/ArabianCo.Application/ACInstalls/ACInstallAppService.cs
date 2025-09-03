@@ -77,7 +77,11 @@ namespace ArabianCo.ACInstalls
                                 {
                                         throw new UserFriendlyException("AddressId is required");
                                 }
-                                address = await _addressRepository.GetAsync(input.AddressId.Value);
+                                address = await _addressRepository.FirstOrDefaultAsync(a => a.Id == input.AddressId.Value && a.UserId == AbpSession.UserId);
+                                if (address == null)
+                                {
+                                        throw new UserFriendlyException("Invalid address");
+                                }
                         }
 
                         var entity = ObjectMapper.Map<ACInstall>(input);
