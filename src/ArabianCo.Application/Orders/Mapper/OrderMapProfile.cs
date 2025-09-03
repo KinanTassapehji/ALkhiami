@@ -12,5 +12,10 @@ internal class OrderMapProfile : Profile
         CreateMap<UpdateOrderDto, Order>();
         CreateMap<CreateOrderDetailDto, OrderDetail>();
         CreateMap<OrderDetailDto, OrderDetail>().ReverseMap();
-    }
+		CreateMap<Order, OrderDto>();
+		CreateMap<Order, LiteOrderDto>();
+
+		CreateMap<OrderDetail, OrderDetailDto>();
+		CreateMap<OrderDetailDto, OrderDetail>();
+	}
 }
