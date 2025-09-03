@@ -58,15 +58,27 @@ namespace ArabianCo.ACInstalls
                                 throw new UserFriendlyException("Only one request allowed a day");
                         }
 
-                        var address = new Address
+                        Address address;
+                        if (!AbpSession.UserId.HasValue)
                         {
-                                CityId = input.CityId,
-                                Street = input.Street,
-                                Area = input.Area,
-                                OtherNotes = input.OtherNotes
-                        };
-                        await _addressRepository.InsertAsync(address);
-                        await CurrentUnitOfWork.SaveChangesAsync();
+                                address = new Address
+                                {
+                                        CityId = input.CityId,
+                                        Street = input.Street,
+                                        Area = input.Area,
+                                        OtherNotes = input.OtherNotes
+                                };
+                                await _addressRepository.InsertAsync(address);
+                                await CurrentUnitOfWork.SaveChangesAsync();
+                        }
+                        else
+                        {
+                                if (!input.AddressId.HasValue)
+                                {
+                                        throw new UserFriendlyException("AddressId is required");
+                                }
+                                address = await _addressRepository.GetAsync(input.AddressId.Value);
+                        }
 
                         var entity = ObjectMapper.Map<ACInstall>(input);
                         entity.AddressId = address.Id;
@@ -79,7 +91,7 @@ namespace ArabianCo.ACInstalls
                         try
                         {
                                 string cityName = await _cityRepository.GetAll().Include(c => c.Translations)
-                                                .Where(c => c.Id == input.CityId)
+                                                .Where(c => c.Id == address.CityId)
                                                 .Select(c => c.Translations.FirstOrDefault().Name)
                                                 .FirstOrDefaultAsync();
                                 if (!input.Email.IsNullOrEmpty())
@@ -93,7 +105,7 @@ namespace ArabianCo.ACInstalls
                                 await _emailService.SendEmailAsync(new List<string>
                                 { /*"aftersales11@arabianco.com", "aftersales14@arabianco.com", "aftersales9@arabianco.com"*/ "malaz.tassapehji@gmail.com"},
                                 "New Maintenance Request",
-                                $"Client Name: {input.FullName} \r\nPhone: {input.PhoneNumber}\r\nCity: {cityName}\r\nArea: {input.Area}\r\nNote: {input.Note}\r\nAt: {entity.CreationTime}"
+                                $"Client Name: {input.FullName} \r\nPhone: {input.PhoneNumber}\r\nCity: {cityName}\r\nArea: {address.Area}\r\nNote: {input.Note}\r\nAt: {entity.CreationTime}"
                                 );
                         }
                         catch (Exception)
