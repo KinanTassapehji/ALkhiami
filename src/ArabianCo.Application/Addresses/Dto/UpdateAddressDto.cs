@@ -19,7 +19,6 @@ namespace ArabianCo.Addresses.Dto
 
         public string OtherNotes { get; set; }
 
-        [Required]
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
     }
 }

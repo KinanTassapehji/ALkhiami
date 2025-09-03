@@ -7,6 +7,6 @@ namespace ArabianCo.Addresses
 {
     public interface IAddressAppService : IArabianCoAsyncCrudAppService<AddressDto, int, LiteAddressDto, PagedAddressResultRequestDto, CreateAddressDto, UpdateAddressDto>
     {
-        Task<ListResultDto<AddressDto>> GetByUserId(long userId);
+        Task<ListResultDto<AddressDto>> GetByUserId(long? userId);
     }
 }
