@@ -39,7 +39,7 @@ namespace ArabianCo.Users.Dto
 
         public DateTime CreationTime { get; set; }
 
-        public List<AddressDto> Addresses { get; set; }
+        public List<AddressDto> Addresses { get; set; } = new();
 
         public string[] RoleNames { get; set; }
     }
