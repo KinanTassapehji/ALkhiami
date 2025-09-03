@@ -52,8 +52,17 @@ namespace ArabianCo.Controllers
         [HttpPost]
         public async Task<AuthenticateResultModel> Authenticate([FromBody] AuthenticateModel model)
         {
+            if (string.IsNullOrWhiteSpace(model.UserNameOrEmailAddress) && string.IsNullOrWhiteSpace(model.PhoneNumber))
+            {
+                throw new UserFriendlyException(L("LoginFailed"), L("InvalidUserNameOrPassword"));
+            }
+
+            var loginIdentifier = string.IsNullOrWhiteSpace(model.PhoneNumber)
+                ? model.UserNameOrEmailAddress
+                : model.PhoneNumber;
+
             var loginResult = await GetLoginResultAsync(
-                model.UserNameOrEmailAddress,
+                loginIdentifier,
                 model.Password,
                 GetTenancyNameOrNull()
             );

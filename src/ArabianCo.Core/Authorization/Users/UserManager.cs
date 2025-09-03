@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Abp.Authorization;
@@ -35,27 +38,38 @@ namespace ArabianCo.Authorization.Users
           IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
           IOrganizationUnitSettings organizationUnitSettings,
           ISettingManager settingManager, 
-          IRepository<UserLogin, long> userLoginRepository)
-          : base(
-              roleManager,
-              store,
-              optionsAccessor,
-              passwordHasher,
-              userValidators,
-              passwordValidators,
-              keyNormalizer,
-              errors,
-              services,
-              logger,
-              permissionManager,
-              unitOfWorkManager,
-              cacheManager,
-              organizationUnitRepository,
-              userOrganizationUnitRepository,
-              organizationUnitSettings,
-              settingManager,
-              userLoginRepository)
+            IRepository<UserLogin, long> userLoginRepository)
+            : base(
+                roleManager,
+                store,
+                optionsAccessor,
+                passwordHasher,
+                userValidators,
+                passwordValidators,
+                keyNormalizer,
+                errors,
+                services,
+                logger,
+                permissionManager,
+                unitOfWorkManager,
+                cacheManager,
+                organizationUnitRepository,
+                userOrganizationUnitRepository,
+                organizationUnitSettings,
+                settingManager,
+                userLoginRepository)
         {
+        }
+
+        public override async Task<User> FindByNameOrEmailAsync(string userNameOrEmailAddress)
+        {
+            var user = await base.FindByNameOrEmailAsync(userNameOrEmailAddress);
+            if (user == null)
+            {
+                user = await Users.FirstOrDefaultAsync(u => u.PhoneNumber == userNameOrEmailAddress);
+            }
+
+            return user;
         }
     }
 }
