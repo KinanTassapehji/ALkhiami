@@ -65,7 +65,7 @@ namespace ArabianCo.Users
             user.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(user, input.Password);
 
 
-			await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
+                        await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
             CheckErrors(await _userManager.CreateAsync(user, input.Password));
 
@@ -76,7 +76,7 @@ namespace ArabianCo.Users
 
             CurrentUnitOfWork.SaveChanges();
 
-            return MapToEntityDto(user);
+            return await GetAsync(new EntityDto<long>(user.Id));
         }
 
         public override async Task<UserDto> UpdateAsync(UpdateUserDto input)
@@ -163,14 +163,14 @@ namespace ArabianCo.Users
 
         protected override IQueryable<User> CreateFilteredQuery(PagedUserResultRequestDto input)
         {
-            return Repository.GetAllIncluding(x => x.Roles)
+            return Repository.GetAllIncluding(x => x.Roles, x => x.Addresses)
                 .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(input.Keyword) || x.Name.Contains(input.Keyword) || x.EmailAddress.Contains(input.Keyword))
                 .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
         }
 
         protected override async Task<User> GetEntityByIdAsync(long id)
         {
-            var user = await Repository.GetAllIncluding(x => x.Roles).FirstOrDefaultAsync(x => x.Id == id);
+            var user = await Repository.GetAllIncluding(x => x.Roles, x => x.Addresses).FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
             {

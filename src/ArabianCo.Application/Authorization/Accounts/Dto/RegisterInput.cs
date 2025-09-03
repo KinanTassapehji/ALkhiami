@@ -20,11 +20,11 @@ namespace ArabianCo.Authorization.Accounts.Dto
         [Required]
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
-		[Required]
-		[StringLength(10)]
-		public string PhoneNumber { get; set; }
+                [Required]
+                [StringLength(10)]
+                public string PhoneNumber { get; set; }
 
-		[Required]
+        [Required]
         [EmailAddress]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]
         public string EmailAddress { get; set; }
