@@ -1,3 +1,4 @@
+using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using ArabianCo.CrudAppServiceBase;
 using ArabianCo.Domain.Orders;
@@ -16,7 +17,8 @@ public class OrderAppService : ArabianCoAsyncCrudAppService<Order, OrderDto, int
     public override async Task<OrderDto> CreateAsync(CreateOrderDto input)
     {
         var entity = MapToEntity(input);
-        if (entity.OrderDetails != null)
+		entity.Status = OrderStatus.Pending;
+		if (entity.OrderDetails != null)
         {
             entity.Subtotal = entity.OrderDetails.Sum(d => d.UnitPrice * d.Quantity);
         }
@@ -37,8 +39,18 @@ public class OrderAppService : ArabianCoAsyncCrudAppService<Order, OrderDto, int
         await CurrentUnitOfWork.SaveChangesAsync();
         return MapToEntityDto(entity);
     }
+	public override async Task DeleteAsync(EntityDto<int> input)
+	{
+		CheckDeletePermission();
 
-    protected override IQueryable<Order> CreateFilteredQuery(PagedOrderResultRequestDto input)
+		var entity = await Repository.GetAsync(input.Id);
+		entity.Status = OrderStatus.Cancelled;
+
+		await Repository.UpdateAsync(entity);
+		await Repository.DeleteAsync(entity);
+		await CurrentUnitOfWork.SaveChangesAsync();
+	}
+	protected override IQueryable<Order> CreateFilteredQuery(PagedOrderResultRequestDto input)
     {
         var query = base.CreateFilteredQuery(input);
         if (input.UserId.HasValue)
