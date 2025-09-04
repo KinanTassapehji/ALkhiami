@@ -4,7 +4,7 @@ using ArabianCo.Authorization.Accounts.Dto;
 
 namespace ArabianCo.Authorization.Accounts
 {
-    public interface IAccountAppService : IApplicationService
+    internal interface IAccountAppService : IApplicationService
     {
         Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input);
 
