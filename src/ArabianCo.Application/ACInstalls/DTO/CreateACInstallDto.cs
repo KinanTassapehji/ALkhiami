@@ -26,8 +26,6 @@ namespace ArabianCo.ACInstalls.DTO
                 public string Area { get; set; }
                 public string OtherNotes { get; set; }
 
-                public int? AddressId { get; set; }
-
                 [Required]
                 public int BrandId { get; set; }
                 [Required]
@@ -40,20 +38,17 @@ namespace ArabianCo.ACInstalls.DTO
 
                 public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
                 {
-                        if (!AddressId.HasValue)
+                        if (CityId <= 0)
                         {
-                                if (CityId <= 0)
-                                {
-                                        yield return new ValidationResult("CityId is required", new[] { nameof(CityId) });
-                                }
-                                if (string.IsNullOrWhiteSpace(Street))
-                                {
-                                        yield return new ValidationResult("Street is required", new[] { nameof(Street) });
-                                }
-                                if (string.IsNullOrWhiteSpace(Area))
-                                {
-                                        yield return new ValidationResult("Area is required", new[] { nameof(Area) });
-                                }
+                                yield return new ValidationResult("CityId is required", new[] { nameof(CityId) });
+                        }
+                        if (string.IsNullOrWhiteSpace(Street))
+                        {
+                                yield return new ValidationResult("Street is required", new[] { nameof(Street) });
+                        }
+                        if (string.IsNullOrWhiteSpace(Area))
+                        {
+                                yield return new ValidationResult("Area is required", new[] { nameof(Area) });
                         }
                         yield break;
                 }

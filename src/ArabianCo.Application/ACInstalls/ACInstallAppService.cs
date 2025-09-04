@@ -12,6 +12,7 @@ using ArabianCo.Domain.ACInstalls;
 using ArabianCo.Domain.Attachments;
 using ArabianCo.Domain.Cities;
 using ArabianCo.Domain.Addresses;
+using ArabianCo.Addresses;
 using ArabianCo.EmailAppService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,16 +31,19 @@ namespace ArabianCo.ACInstalls
                 private readonly IEmailService _emailService;
                 private readonly IRepository<City> _cityRepository;
                 private readonly IRepository<Address> _addressRepository;
-		public ACInstallAppService(IRepository<ACInstall, int> repository /*IMaintenanceRequestsManger maintenanceRequestsManger*/,
+                private readonly IAddressAppService _addressAppService;
+                public ACInstallAppService(IRepository<ACInstall, int> repository /*IMaintenanceRequestsManger maintenanceRequestsManger*/,
                         IAttachmentManager attachmentManager,
                         IEmailService emailService,
                         IRepository<City> cityRepository,
-                        IRepository<Address> addressRepository) : base(repository)
+                        IRepository<Address> addressRepository,
+                        IAddressAppService addressAppService) : base(repository)
                 {
                         _attachmentManager = attachmentManager;
                         _emailService = emailService;
                         _cityRepository = cityRepository;
                         _addressRepository = addressRepository;
+                        _addressAppService = addressAppService;
                         /*_maintenanceRequestsManger = maintenanceRequestsManger;*/
                 }
 		[AbpAllowAnonymous]
@@ -58,34 +62,16 @@ namespace ArabianCo.ACInstalls
                                 throw new UserFriendlyException("Only one request allowed a day");
                         }
 
-                        Address address;
-                        if (input.AddressId.HasValue)
+                        var address = new Address
                         {
-                                if (!AbpSession.UserId.HasValue)
-                                {
-                                        throw new UserFriendlyException("Login required to use an existing address");
-                                }
-
-                                address = await _addressRepository.FirstOrDefaultAsync(
-                                        a => a.Id == input.AddressId.Value && a.UserId == AbpSession.UserId);
-                                if (address == null)
-                                {
-                                        throw new UserFriendlyException("Invalid address");
-                                }
-                        }
-                        else
-                        {
-                                address = new Address
-                                {
-                                        CityId = input.CityId,
-                                        Street = input.Street,
-                                        Area = input.Area,
-                                        OtherNotes = input.OtherNotes,
-                                        UserId = AbpSession.UserId
-                                };
-                                await _addressRepository.InsertAsync(address);
-                                await CurrentUnitOfWork.SaveChangesAsync();
-                        }
+                                CityId = input.CityId,
+                                Street = input.Street,
+                                Area = input.Area,
+                                OtherNotes = input.OtherNotes,
+                                UserId = AbpSession.UserId
+                        };
+                        await _addressRepository.InsertAsync(address);
+                        await CurrentUnitOfWork.SaveChangesAsync();
 
                         var entity = ObjectMapper.Map<ACInstall>(input);
                         entity.AddressId = address.Id;
@@ -128,8 +114,6 @@ namespace ArabianCo.ACInstalls
                                 .Where(x => x.Id == input.Id)
                                 .Include(x => x.Brand).ThenInclude(x => x.Translations)
                                 .Include(x => x.Category).ThenInclude(x => x.Translations)
-                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Translations)
-                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Country).ThenInclude(c => c.Translations)
                                 .FirstOrDefaultAsync();
 
 			if (entity == null)
@@ -137,9 +121,59 @@ namespace ArabianCo.ACInstalls
 				throw new EntityNotFoundException(typeof(ACInstall), input.Id);
 			}
 
-			var attachment = await _attachmentManager.GetAttachmentByRefAsync(entity.Id, Enums.Enum.AttachmentRefType.ACInstall);
+                        var attachment = await _attachmentManager.GetAttachmentByRefAsync(entity.Id, Enums.Enum.AttachmentRefType.ACInstall);
                         var result = MapToEntityDto(entity);
                         result.CreationTime = result.CreationTime.AddHours(10);
+
+                        if (entity.Brand != null)
+                        {
+                                var brandTranslation = entity.Brand.Translations
+                                        ?.OrderBy(t => t.Id)
+                                        .FirstOrDefault();
+                                if (brandTranslation != null)
+                                {
+                                        result.Brand.Name = brandTranslation.Name;
+                                        result.Brand.Description = brandTranslation.Description;
+                                }
+                        }
+
+                        if (entity.Category != null)
+                        {
+                                var categoryTranslation = entity.Category.Translations
+                                        ?.OrderBy(t => t.Id)
+                                        .FirstOrDefault();
+                                if (categoryTranslation != null)
+                                {
+                                        result.Category.Name = categoryTranslation.Name;
+                                        result.Category.Description = categoryTranslation.Description;
+                                }
+                        }
+
+                        var address = await _addressAppService.GetAsync(new EntityDto<int>(entity.AddressId));
+                        if (address != null)
+                        {
+                                result.Street = address.Street;
+                                result.Area = address.Area;
+                                result.OtherNotes = address.OtherNotes;
+                                var city = await _cityRepository.GetAll()
+                                        .Include(c => c.Translations)
+                                        .Include(c => c.Country).ThenInclude(c => c.Translations)
+                                        .Where(c => c.Id == address.CityId)
+                                        .FirstOrDefaultAsync();
+                                if (city != null)
+                                {
+                                        result.City = city.MapTo<CityDetailsDto>();
+                                        var cityTranslation = city.Translations?.OrderBy(t => t.Id).FirstOrDefault();
+                                        result.City.Name = cityTranslation?.Name;
+                                        if (result.City.Country != null)
+                                        {
+                                                var countryTranslation = city.Country.Translations
+                                                        ?.OrderBy(t => t.Id)
+                                                        .FirstOrDefault();
+                                                result.City.Country.Name = countryTranslation?.Name;
+                                        }
+                                }
+                        }
 
 			if (attachment != null)
 			{
@@ -169,7 +203,8 @@ namespace ArabianCo.ACInstalls
                         var dto = base.MapToLiteEntityDto(entity);
                         if (entity.Address?.City != null)
                         {
-                                dto.CityName = entity.Address.City.MapTo<LiteCityDto>().Name;
+                                var cityTranslation = entity.Address.City.Translations?.OrderBy(t => t.Id).FirstOrDefault();
+                                dto.CityName = cityTranslation?.Name;
                         }
                         return dto;
                 }
@@ -186,7 +221,10 @@ namespace ArabianCo.ACInstalls
 		protected override IQueryable<ACInstall> CreateFilteredQuery(PagedACInstallResultDto input)
 		{
                         IQueryable<ACInstall> query = Repository.GetAll()
-                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Translations);
+                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Country).ThenInclude(ct => ct.Translations)
+                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Translations)
+                                .Include(x => x.Brand).ThenInclude(b => b.Translations)
+                                .Include(x => x.Category).ThenInclude(c => c.Translations);
 			if (input.IsDeleted)
 			{
 				query = query.IgnoreQueryFilters().Where(x => x.IsDeleted);
