@@ -125,28 +125,22 @@ namespace ArabianCo.ACInstalls
                         var result = MapToEntityDto(entity);
                         result.CreationTime = result.CreationTime.AddHours(10);
 
-                        if (entity.Brand?.Translations?.Any() == true)
+                        if (entity.Brand != null)
                         {
-                                result.Brand.Name = entity.Brand.Translations
-                                        .OrderBy(t => t.Id)
-                                        .Select(t => t.Name)
+                                var brandTranslation = entity.Brand.Translations
+                                        ?.OrderBy(t => t.Id)
                                         .FirstOrDefault();
-                                result.Brand.Description = entity.Brand.Translations
-                                        .OrderBy(t => t.Id)
-                                        .Select(t => t.Description)
-                                        .FirstOrDefault();
+                                result.Brand.Name = brandTranslation?.Name ?? entity.Brand.Name;
+                                result.Brand.Description = brandTranslation?.Description ?? entity.Brand.Description;
                         }
 
-                        if (entity.Category?.Translations?.Any() == true)
+                        if (entity.Category != null)
                         {
-                                result.Category.Name = entity.Category.Translations
-                                        .OrderBy(t => t.Id)
-                                        .Select(t => t.Name)
+                                var categoryTranslation = entity.Category.Translations
+                                        ?.OrderBy(t => t.Id)
                                         .FirstOrDefault();
-                                result.Category.Description = entity.Category.Translations
-                                        .OrderBy(t => t.Id)
-                                        .Select(t => t.Description)
-                                        .FirstOrDefault();
+                                result.Category.Name = categoryTranslation?.Name ?? entity.Category.Name;
+                                result.Category.Description = categoryTranslation?.Description ?? entity.Category.Description;
                         }
 
                         var address = await _addressAppService.GetAsync(new EntityDto<int>(entity.AddressId));
@@ -163,16 +157,14 @@ namespace ArabianCo.ACInstalls
                                 if (city != null)
                                 {
                                         result.City = city.MapTo<CityDetailsDto>();
-                                        result.City.Name = city.Translations
-                                                .OrderBy(t => t.Id)
-                                                .Select(t => t.Name)
-                                                .FirstOrDefault();
+                                        var cityTranslation = city.Translations?.OrderBy(t => t.Id).FirstOrDefault();
+                                        result.City.Name = cityTranslation?.Name ?? city.Name;
                                         if (result.City.Country != null)
                                         {
-                                                result.City.Country.Name = city.Country.Translations
-                                                        .OrderBy(t => t.Id)
-                                                        .Select(t => t.Name)
+                                                var countryTranslation = city.Country.Translations
+                                                        ?.OrderBy(t => t.Id)
                                                         .FirstOrDefault();
+                                                result.City.Country.Name = countryTranslation?.Name ?? city.Country.Name;
                                         }
                                 }
                         }
@@ -205,7 +197,8 @@ namespace ArabianCo.ACInstalls
                         var dto = base.MapToLiteEntityDto(entity);
                         if (entity.Address?.City != null)
                         {
-                                dto.CityName = entity.Address.City.MapTo<LiteCityDto>().Name;
+                                var cityTranslation = entity.Address.City.Translations?.OrderBy(t => t.Id).FirstOrDefault();
+                                dto.CityName = cityTranslation?.Name ?? entity.Address.City.Name;
                         }
                         return dto;
                 }
@@ -222,7 +215,10 @@ namespace ArabianCo.ACInstalls
 		protected override IQueryable<ACInstall> CreateFilteredQuery(PagedACInstallResultDto input)
 		{
                         IQueryable<ACInstall> query = Repository.GetAll()
-                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Translations);
+                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Country).ThenInclude(ct => ct.Translations)
+                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Translations)
+                                .Include(x => x.Brand).ThenInclude(b => b.Translations)
+                                .Include(x => x.Category).ThenInclude(c => c.Translations);
 			if (input.IsDeleted)
 			{
 				query = query.IgnoreQueryFilters().Where(x => x.IsDeleted);
