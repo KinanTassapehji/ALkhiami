@@ -130,8 +130,11 @@ namespace ArabianCo.ACInstalls
                                 var brandTranslation = entity.Brand.Translations
                                         ?.OrderBy(t => t.Id)
                                         .FirstOrDefault();
-                                result.Brand.Name = brandTranslation?.Name ?? entity.Brand.Name;
-                                result.Brand.Description = brandTranslation?.Description ?? entity.Brand.Description;
+                                if (brandTranslation != null)
+                                {
+                                        result.Brand.Name = brandTranslation.Name;
+                                        result.Brand.Description = brandTranslation.Description;
+                                }
                         }
 
                         if (entity.Category != null)
@@ -139,8 +142,11 @@ namespace ArabianCo.ACInstalls
                                 var categoryTranslation = entity.Category.Translations
                                         ?.OrderBy(t => t.Id)
                                         .FirstOrDefault();
-                                result.Category.Name = categoryTranslation?.Name ?? entity.Category.Name;
-                                result.Category.Description = categoryTranslation?.Description ?? entity.Category.Description;
+                                if (categoryTranslation != null)
+                                {
+                                        result.Category.Name = categoryTranslation.Name;
+                                        result.Category.Description = categoryTranslation.Description;
+                                }
                         }
 
                         var address = await _addressAppService.GetAsync(new EntityDto<int>(entity.AddressId));
@@ -158,13 +164,13 @@ namespace ArabianCo.ACInstalls
                                 {
                                         result.City = city.MapTo<CityDetailsDto>();
                                         var cityTranslation = city.Translations?.OrderBy(t => t.Id).FirstOrDefault();
-                                        result.City.Name = cityTranslation?.Name ?? city.Name;
+                                        result.City.Name = cityTranslation?.Name;
                                         if (result.City.Country != null)
                                         {
                                                 var countryTranslation = city.Country.Translations
                                                         ?.OrderBy(t => t.Id)
                                                         .FirstOrDefault();
-                                                result.City.Country.Name = countryTranslation?.Name ?? city.Country.Name;
+                                                result.City.Country.Name = countryTranslation?.Name;
                                         }
                                 }
                         }
@@ -198,7 +204,7 @@ namespace ArabianCo.ACInstalls
                         if (entity.Address?.City != null)
                         {
                                 var cityTranslation = entity.Address.City.Translations?.OrderBy(t => t.Id).FirstOrDefault();
-                                dto.CityName = cityTranslation?.Name ?? entity.Address.City.Name;
+                                dto.CityName = cityTranslation?.Name;
                         }
                         return dto;
                 }
