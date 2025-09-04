@@ -59,15 +59,34 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
             throw new UserFriendlyException("Only one request allowed a day");
         }
 
-        var address = new Address
+        Address address;
+        if (input.AddressId.HasValue)
         {
-            CityId = input.CityId,
-            Street = input.Street,
-            Area = input.Area,
-            OtherNotes = input.OtherNotes
-        };
-        await _addressRepository.InsertAsync(address);
-        await CurrentUnitOfWork.SaveChangesAsync();
+            if (!AbpSession.UserId.HasValue)
+            {
+                throw new UserFriendlyException("Login required to use an existing address");
+            }
+
+            address = await _addressRepository.FirstOrDefaultAsync(
+                a => a.Id == input.AddressId.Value && a.UserId == AbpSession.UserId);
+            if (address == null)
+            {
+                throw new UserFriendlyException("Invalid address");
+            }
+        }
+        else
+        {
+            address = new Address
+            {
+                CityId = input.CityId,
+                Street = input.Street,
+                Area = input.Area,
+                OtherNotes = input.OtherNotes,
+                UserId = AbpSession.UserId
+            };
+            await _addressRepository.InsertAsync(address);
+            await CurrentUnitOfWork.SaveChangesAsync();
+        }
 
         var entity = ObjectMapper.Map<MaintenanceRequest>(input);
         entity.AddressId = address.Id;
@@ -83,7 +102,7 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
         {
             string cityName = await _cityRepository.GetAll()
                 .Include(c => c.Translations)
-                .Where(c => c.Id == input.CityId)
+                .Where(c => c.Id == address.CityId)
                 .Select(c => c.Translations
                     .OrderBy(t => t.Id)
                     .Select(t => t.Name)
@@ -101,7 +120,7 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
             await _emailService.SendEmailAsync(new List<string>
             { "aftersales11@arabianco.com", "aftersales14@arabianco.com", "aftersales9@arabianco.com" },
             "New Maintenance Request",
-            $"Client Name: {input.FullName} \r\nPhone: {input.PhoneNumber}\r\nCity: {cityName}\r\nArea: {input.Area}\r\nProblem: {input.Problem}\r\nAt: {entity.CreationTime}");
+            $"Client Name: {input.FullName} \r\nPhone: {input.PhoneNumber}\r\nCity: {cityName}\r\nArea: {address.Area}\r\nProblem: {input.Problem}\r\nAt: {entity.CreationTime}");
         }
         catch (Exception)
         {

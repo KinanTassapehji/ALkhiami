@@ -51,7 +51,7 @@ namespace ArabianCo.Authorization.Users
                 EmailAddress = emailAddress,
                 IsActive = true,
                 UserName = userName,
-                PhoneNumber =phoneNumber,
+                PhoneNumber = phoneNumber,
                 IsEmailConfirmed = isEmailConfirmed,
                 Roles = new List<UserRole>()
             };

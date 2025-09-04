@@ -1,5 +1,6 @@
 using Abp.Domain.Entities.Auditing;
 using ArabianCo.Domain.Cities;
+using ArabianCo.Authorization.Users;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,5 +21,10 @@ namespace ArabianCo.Domain.Addresses
         public string Area { get; set; }
 
         public string OtherNotes { get; set; }
+
+        public long? UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public virtual User User { get; set; }
     }
 }
