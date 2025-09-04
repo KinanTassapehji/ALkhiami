@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ArabianCo.Orders;
 
-public class OrderAppService : ArabianCoAsyncCrudAppService<Order, OrderDto, int, LiteOrderDto, PagedOrderResultRequestDto, CreateOrderDto, UpdateOrderDto>, IOrderAppService
+internal class OrderAppService : ArabianCoAsyncCrudAppService<Order, OrderDto, int, LiteOrderDto, PagedOrderResultRequestDto, CreateOrderDto, UpdateOrderDto>, IOrderAppService
 {
     public OrderAppService(IRepository<Order, int> repository) : base(repository)
     {
