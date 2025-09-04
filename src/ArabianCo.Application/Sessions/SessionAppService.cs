@@ -5,7 +5,7 @@ using ArabianCo.Sessions.Dto;
 
 namespace ArabianCo.Sessions
 {
-    public class SessionAppService : ArabianCoAppServiceBase, ISessionAppService
+    internal class SessionAppService : ArabianCoAppServiceBase, ISessionAppService
     {
         [DisableAuditing]
         public async Task<GetCurrentLoginInformationsOutput> GetCurrentLoginInformations()
