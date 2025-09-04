@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 namespace ArabianCo.Users
 {
     [AbpAuthorize(PermissionNames.Pages_Users)]
-    public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UpdateUserDto>, IUserAppService
+    internal class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UpdateUserDto>, IUserAppService
     {
         private readonly UserManager _userManager;
         private readonly RoleManager _roleManager;

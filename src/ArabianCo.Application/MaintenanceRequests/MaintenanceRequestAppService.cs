@@ -6,11 +6,12 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Timing;
 using Abp.UI;
+using ArabianCo.Authorization.Users;
 using ArabianCo.Cities.Dto;
 using ArabianCo.CrudAppServiceBase;
+using ArabianCo.Domain.Addresses;
 using ArabianCo.Domain.Attachments;
 using ArabianCo.Domain.Cities;
-using ArabianCo.Domain.Addresses;
 using ArabianCo.Domain.MaintenanceRequests;
 using ArabianCo.EmailAppService;
 using ArabianCo.MaintenanceRequests.Dto;
@@ -18,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -59,36 +61,31 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
             throw new UserFriendlyException("Only one request allowed a day");
         }
 
-        Address address;
-        if (input.AddressId.HasValue)
+        var address = new Address
         {
-            if (!AbpSession.UserId.HasValue)
-            {
-                throw new UserFriendlyException("Login required to use an existing address");
-            }
+            CityId = input.CityId,
+            Street = input.Street,
+            Area = input.Area,
+            OtherNotes = input.OtherNotes,
+            UserId = AbpSession.UserId
+        };
+		await _addressRepository.InsertAsync(address);
+		await CurrentUnitOfWork.SaveChangesAsync();
+		//if (input.AddressId.HasValue)
+		//{
+		//    if (!AbpSession.UserId.HasValue)
+		//    {
+		//        throw new UserFriendlyException("Login required to use an existing address");
+		//    }
 
-            address = await _addressRepository.FirstOrDefaultAsync(
-                a => a.Id == input.AddressId.Value && a.UserId == AbpSession.UserId);
-            if (address == null)
-            {
-                throw new UserFriendlyException("Invalid address");
-            }
-        }
-        else
-        {
-            address = new Address
-            {
-                CityId = input.CityId,
-                Street = input.Street,
-                Area = input.Area,
-                OtherNotes = input.OtherNotes,
-                UserId = AbpSession.UserId
-            };
-            await _addressRepository.InsertAsync(address);
-            await CurrentUnitOfWork.SaveChangesAsync();
-        }
-
-        var entity = ObjectMapper.Map<MaintenanceRequest>(input);
+		//    address = await _addressRepository.FirstOrDefaultAsync(
+		//        a => a.Id == input.AddressId.Value && a.UserId == AbpSession.UserId);
+		//    if (address == null)
+		//    {
+		//        throw new UserFriendlyException("Invalid address");
+		//    }
+		//}
+		var entity = ObjectMapper.Map<MaintenanceRequest>(input);
         entity.AddressId = address.Id;
         entity.Address = address;
 

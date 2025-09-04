@@ -4,7 +4,7 @@ using ArabianCo.Sessions.Dto;
 
 namespace ArabianCo.Sessions
 {
-    public interface ISessionAppService : IApplicationService
+    internal interface ISessionAppService : IApplicationService
     {
         Task<GetCurrentLoginInformationsOutput> GetCurrentLoginInformations();
     }

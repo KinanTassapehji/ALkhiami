@@ -6,7 +6,7 @@ using ArabianCo.Users.Dto;
 
 namespace ArabianCo.Users
 {
-	public interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedUserResultRequestDto, CreateUserDto, UpdateUserDto>
+	internal interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedUserResultRequestDto, CreateUserDto, UpdateUserDto>
 	{
         Task DeActivate(EntityDto<long> user);
         Task Activate(EntityDto<long> user);

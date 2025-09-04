@@ -30,7 +30,7 @@ public class CreateMaintenanceRequestDto : IValidatableObject, IShouldInitialize
     public string Area { get; set; }
     public string OtherNotes { get; set; }
 
-    public int? AddressId { get; set; }
+    //public int? AddressId { get; set; }
 
     [Required]
     public int BrandId { get; set; }
@@ -44,8 +44,6 @@ public class CreateMaintenanceRequestDto : IValidatableObject, IShouldInitialize
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (!AddressId.HasValue)
-        {
             if (CityId <= 0)
             {
                 yield return new ValidationResult("CityId is required", new[] { nameof(CityId) });
@@ -58,7 +56,7 @@ public class CreateMaintenanceRequestDto : IValidatableObject, IShouldInitialize
             {
                 yield return new ValidationResult("Area is required", new[] { nameof(Area) });
             }
-        }
-        yield break;
-    }
+		yield break;
+
+	}
 }
