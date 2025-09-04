@@ -125,6 +125,30 @@ namespace ArabianCo.ACInstalls
                         var result = MapToEntityDto(entity);
                         result.CreationTime = result.CreationTime.AddHours(10);
 
+                        if (entity.Brand?.Translations?.Any() == true)
+                        {
+                                result.Brand.Name = entity.Brand.Translations
+                                        .OrderBy(t => t.Id)
+                                        .Select(t => t.Name)
+                                        .FirstOrDefault();
+                                result.Brand.Description = entity.Brand.Translations
+                                        .OrderBy(t => t.Id)
+                                        .Select(t => t.Description)
+                                        .FirstOrDefault();
+                        }
+
+                        if (entity.Category?.Translations?.Any() == true)
+                        {
+                                result.Category.Name = entity.Category.Translations
+                                        .OrderBy(t => t.Id)
+                                        .Select(t => t.Name)
+                                        .FirstOrDefault();
+                                result.Category.Description = entity.Category.Translations
+                                        .OrderBy(t => t.Id)
+                                        .Select(t => t.Description)
+                                        .FirstOrDefault();
+                        }
+
                         var address = await _addressAppService.GetAsync(new EntityDto<int>(entity.AddressId));
                         if (address != null)
                         {
@@ -139,6 +163,17 @@ namespace ArabianCo.ACInstalls
                                 if (city != null)
                                 {
                                         result.City = city.MapTo<CityDetailsDto>();
+                                        result.City.Name = city.Translations
+                                                .OrderBy(t => t.Id)
+                                                .Select(t => t.Name)
+                                                .FirstOrDefault();
+                                        if (result.City.Country != null)
+                                        {
+                                                result.City.Country.Name = city.Country.Translations
+                                                        .OrderBy(t => t.Id)
+                                                        .Select(t => t.Name)
+                                                        .FirstOrDefault();
+                                        }
                                 }
                         }
 
