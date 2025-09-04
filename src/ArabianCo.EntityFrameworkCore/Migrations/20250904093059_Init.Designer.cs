@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArabianCo.Migrations
 {
     [DbContext(typeof(ArabianCoDbContext))]
-    [Migration("20250901134203_add-phone-number")]
-    partial class addphonenumber
+    [Migration("20250904093059_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1541,8 +1541,8 @@ namespace ArabianCo.Migrations
                         .HasColumnType("nvarchar(328)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("SecurityStamp")
                         .HasMaxLength(128)
@@ -1782,9 +1782,14 @@ namespace ArabianCo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Addresses");
                 });
@@ -2525,6 +2530,116 @@ namespace ArabianCo.Migrations
                     b.ToTable("MaintenanceRequests");
                 });
 
+            modelBuilder.Entity("ArabianCo.Domain.Orders.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Discount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("Shipping")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Tax")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders", (string)null);
+                });
+
+            modelBuilder.Entity("ArabianCo.Domain.Orders.OrderDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("OrderId", "ProductId")
+                        .IsUnique();
+
+                    b.ToTable("OrderDetails", (string)null);
+                });
+
             modelBuilder.Entity("ArabianCo.Domain.OurProjects.OurProject", b =>
                 {
                     b.Property<int>("Id")
@@ -2661,7 +2776,7 @@ namespace ArabianCo.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ModelNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -2669,7 +2784,11 @@ namespace ArabianCo.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.HasIndex("ModelNumber")
+                        .IsUnique()
+                        .HasFilter("[ModelNumber] IS NOT NULL");
+
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("ArabianCo.Domain.Products.ProductTranslation", b =>
@@ -3120,7 +3239,14 @@ namespace ArabianCo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ArabianCo.Authorization.Users.User", "User")
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("City");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ArabianCo.Domain.AttributeValues.AttributeValue", b =>
@@ -3266,6 +3392,36 @@ namespace ArabianCo.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("ArabianCo.Domain.Orders.Order", b =>
+                {
+                    b.HasOne("ArabianCo.Authorization.Users.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ArabianCo.Domain.Orders.OrderDetail", b =>
+                {
+                    b.HasOne("ArabianCo.Domain.Orders.Order", "Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ArabianCo.Domain.Products.Product", "Product")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ArabianCo.Domain.OurProjects.OurProjectsTranslation", b =>
                 {
                     b.HasOne("ArabianCo.Domain.OurProjects.OurProject", "Core")
@@ -3407,9 +3563,13 @@ namespace ArabianCo.Migrations
 
             modelBuilder.Entity("ArabianCo.Authorization.Users.User", b =>
                 {
+                    b.Navigation("Addresses");
+
                     b.Navigation("Claims");
 
                     b.Navigation("Logins");
+
+                    b.Navigation("Orders");
 
                     b.Navigation("Permissions");
 
@@ -3462,6 +3622,11 @@ namespace ArabianCo.Migrations
                     b.Navigation("Translations");
                 });
 
+            modelBuilder.Entity("ArabianCo.Domain.Orders.Order", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
             modelBuilder.Entity("ArabianCo.Domain.OurProjects.OurProject", b =>
                 {
                     b.Navigation("Translations");
@@ -3470,6 +3635,8 @@ namespace ArabianCo.Migrations
             modelBuilder.Entity("ArabianCo.Domain.Products.Product", b =>
                 {
                     b.Navigation("AttributeValues");
+
+                    b.Navigation("OrderDetails");
 
                     b.Navigation("Translations");
                 });

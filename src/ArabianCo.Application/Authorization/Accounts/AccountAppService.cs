@@ -6,7 +6,7 @@ using ArabianCo.Authorization.Users;
 
 namespace ArabianCo.Authorization.Accounts
 {
-    public class AccountAppService : ArabianCoAppServiceBase, IAccountAppService
+    internal class AccountAppService : ArabianCoAppServiceBase, IAccountAppService
     {
         // from: http://regexlib.com/REDetails.aspx?regexp_id=1923
         public const string PasswordRegex = "(?=^.{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s)[0-9a-zA-Z!@#$%^&*()]*$";

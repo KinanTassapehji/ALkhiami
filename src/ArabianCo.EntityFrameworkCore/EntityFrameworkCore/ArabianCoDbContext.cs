@@ -74,9 +74,7 @@ namespace ArabianCo.EntityFrameworkCore
 			modelBuilder.Entity<Product>().ToTable("Products");
 
 			// ---- Decimal precision ----
-			modelBuilder.Entity<Product>()
-				.Property(p => p.Price)
-				.HasPrecision(18, 2);
+
 
 			modelBuilder.Entity<Order>()
 				.Property(o => o.Subtotal)
