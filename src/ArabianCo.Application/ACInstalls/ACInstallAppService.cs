@@ -103,29 +103,29 @@ namespace ArabianCo.ACInstalls
 
             if (input.AttachmentId.HasValue)
                 await _attachmentManager.CheckAndUpdateRefIdAsync(input.AttachmentId.Value, Enums.Enum.AttachmentRefType.ACInstall, entity.Id);
-            try
-            {
-                string cityName = await _cityRepository.GetAll().Include(c => c.Translations)
-                                .Where(c => c.Id == address.CityId)
-                                .Select(c => c.Translations.FirstOrDefault().Name)
-                                .FirstOrDefaultAsync();
-                if (!input.Email.IsNullOrEmpty())
-                {
-                    var mailAddress = new System.Net.Mail.MailAddress(input.Email);
-                    await _emailService.SendEmailAsync(new List<string>
-                                        {
-                                                input.Email,
-                                        }, "العربية الدولية للأجهزة،نشكر تواصلكم.", "تم رفع طلب الصيانة بنجاح ، \r\nستصلكم رسالة نصية قبل الموعد بيوم لتأكيد الفترة.\r\nيرجى التواجد في الموقع، مع إمكانية تقديم الموعد في حال توفرت إمكانية.\r\n\r\n*للتواصل والاستفسار يرجى التواصل عبر الرقم الموحد*\r\n8001244080");
-                }
-                await _emailService.SendEmailAsync(new List<string>
-                                { /*"aftersales11@arabianco.com", "aftersales14@arabianco.com", "aftersales9@arabianco.com"*/ "malaz.tassapehji@gmail.com"},
-                "New Maintenance Request",
-                $"Client Name: {input.FullName} \r\nPhone: {input.PhoneNumber}\r\nCity: {cityName}\r\nArea: {address.Area}\r\nNote: {input.Note}\r\nAt: {entity.CreationTime}"
-                );
-            }
-            catch (Exception)
-            {
-            }
+            //try
+            //{
+            //    string cityName = await _cityRepository.GetAll().Include(c => c.Translations)
+            //                    .Where(c => c.Id == address.CityId)
+            //                    .Select(c => c.Translations.FirstOrDefault().Name)
+            //                    .FirstOrDefaultAsync();
+            //    if (!input.Email.IsNullOrEmpty())
+            //    {
+            //        var mailAddress = new System.Net.Mail.MailAddress(input.Email);
+            //        await _emailService.SendEmailAsync(new List<string>
+            //                            {
+            //                                    input.Email,
+            //                            }, "العربية الدولية للأجهزة،نشكر تواصلكم.", "تم رفع طلب الصيانة بنجاح ، \r\nستصلكم رسالة نصية قبل الموعد بيوم لتأكيد الفترة.\r\nيرجى التواجد في الموقع، مع إمكانية تقديم الموعد في حال توفرت إمكانية.\r\n\r\n*للتواصل والاستفسار يرجى التواصل عبر الرقم الموحد*\r\n8001244080");
+            //    }
+            //    await _emailService.SendEmailAsync(new List<string>
+            //                    { /*"aftersales11@arabianco.com", "aftersales14@arabianco.com", "aftersales9@arabianco.com"*/ "malaz.tassapehji@gmail.com"},
+            //    "New Maintenance Request",
+            //    $"Client Name: {input.FullName} \r\nPhone: {input.PhoneNumber}\r\nCity: {cityName}\r\nArea: {address.Area}\r\nNote: {input.Note}\r\nAt: {entity.CreationTime}"
+            //    );
+            //}
+            //catch (Exception)
+            //{
+            //}
             return await GetAsync(new EntityDto<int>(entity.Id));
         }
         [AbpAllowAnonymous]
