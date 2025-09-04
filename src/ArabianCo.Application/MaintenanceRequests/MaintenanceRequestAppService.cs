@@ -12,6 +12,7 @@ using ArabianCo.Domain.Attachments;
 using ArabianCo.Domain.Cities;
 using ArabianCo.Domain.Addresses;
 using ArabianCo.Domain.MaintenanceRequests;
+using ArabianCo.Addresses;
 using ArabianCo.EmailAppService;
 using ArabianCo.MaintenanceRequests.Dto;
 using Microsoft.AspNetCore.Mvc;
@@ -30,16 +31,19 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
     private readonly IEmailService _emailService;
     private readonly IRepository<City> _cityRepository;
     private readonly IRepository<Address> _addressRepository;
-	public MaintenanceRequestAppService(IRepository<MaintenanceRequest, int> repository /*IMaintenanceRequestsManger maintenanceRequestsManger*/,
+    private readonly IAddressAppService _addressAppService;
+        public MaintenanceRequestAppService(IRepository<MaintenanceRequest, int> repository /*IMaintenanceRequestsManger maintenanceRequestsManger*/,
                 IAttachmentManager attachmentManager,
                 IEmailService emailService,
                 IRepository<City> cityRepository,
-                IRepository<Address> addressRepository) : base(repository)
+                IRepository<Address> addressRepository,
+                IAddressAppService addressAppService) : base(repository)
         {
                 _attachmentManager = attachmentManager;
                 _emailService = emailService;
                 _cityRepository = cityRepository;
                 _addressRepository = addressRepository;
+                _addressAppService = addressAppService;
                 /*_maintenanceRequestsManger = maintenanceRequestsManger;*/
         }
 	[AbpAllowAnonymous]
@@ -59,34 +63,16 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
             throw new UserFriendlyException("Only one request allowed a day");
         }
 
-        Address address;
-        if (input.AddressId.HasValue)
+        var address = new Address
         {
-            if (!AbpSession.UserId.HasValue)
-            {
-                throw new UserFriendlyException("Login required to use an existing address");
-            }
-
-            address = await _addressRepository.FirstOrDefaultAsync(
-                a => a.Id == input.AddressId.Value && a.UserId == AbpSession.UserId);
-            if (address == null)
-            {
-                throw new UserFriendlyException("Invalid address");
-            }
-        }
-        else
-        {
-            address = new Address
-            {
-                CityId = input.CityId,
-                Street = input.Street,
-                Area = input.Area,
-                OtherNotes = input.OtherNotes,
-                UserId = AbpSession.UserId
-            };
-            await _addressRepository.InsertAsync(address);
-            await CurrentUnitOfWork.SaveChangesAsync();
-        }
+            CityId = input.CityId,
+            Street = input.Street,
+            Area = input.Area,
+            OtherNotes = input.OtherNotes,
+            UserId = AbpSession.UserId
+        };
+        await _addressRepository.InsertAsync(address);
+        await CurrentUnitOfWork.SaveChangesAsync();
 
         var entity = ObjectMapper.Map<MaintenanceRequest>(input);
         entity.AddressId = address.Id;
@@ -136,8 +122,6 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
             .Where(x => x.Id == input.Id)
             .Include(x => x.Brand).ThenInclude(x => x.Translations)
             .Include(x => x.Category).ThenInclude(x => x.Translations)
-            .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Translations)
-            .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Country).ThenInclude(c => c.Translations)
             .FirstOrDefaultAsync();
 
         if (entity == null)
@@ -148,6 +132,23 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
         var attachment = await _attachmentManager.GetAttachmentByRefAsync(entity.Id, Enums.Enum.AttachmentRefType.MaintenanceRequests);
         var result = MapToEntityDto(entity);
         result.CreationTime = result.CreationTime.AddHours(10);
+
+        var address = await _addressAppService.GetAsync(new EntityDto<int>(entity.AddressId));
+        if (address != null)
+        {
+            result.Street = address.Street;
+            result.Area = address.Area;
+            result.OtherNotes = address.OtherNotes;
+            var city = await _cityRepository.GetAll()
+                .Include(c => c.Translations)
+                .Include(c => c.Country).ThenInclude(c => c.Translations)
+                .Where(c => c.Id == address.CityId)
+                .FirstOrDefaultAsync();
+            if (city != null)
+            {
+                result.City = city.MapTo<CityDetailsDto>();
+            }
+        }
 
         if (attachment != null)
         {
