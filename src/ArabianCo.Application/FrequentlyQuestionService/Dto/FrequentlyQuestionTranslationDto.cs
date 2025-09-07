@@ -7,8 +7,8 @@ namespace ArabianCo.FrequentlyQuestionService.Dto;
 
 public class FrequentlyQuestionTranslationDto
 {
-    public string Question { get; set; }
-    public string Answer { get; set; }
-    public string Language { get; set; }
+	public string Question { get; set; }
+	public string Answer { get; set; }
+	public string Language { get; set; }
 
 }

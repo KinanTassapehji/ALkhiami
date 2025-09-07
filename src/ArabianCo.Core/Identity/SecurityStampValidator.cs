@@ -10,16 +10,16 @@ using Abp.Domain.Uow;
 
 namespace ArabianCo.Identity
 {
-    public class SecurityStampValidator : AbpSecurityStampValidator<Tenant, Role, User>
-    {
-        public SecurityStampValidator(
-            IOptions<SecurityStampValidatorOptions> options,
-            SignInManager signInManager,
-            ISystemClock systemClock,
-            ILoggerFactory loggerFactory,
-            IUnitOfWorkManager unitOfWorkManager)
-            : base(options, signInManager, systemClock, loggerFactory, unitOfWorkManager)
-        {
-        }
-    }
+	public class SecurityStampValidator : AbpSecurityStampValidator<Tenant, Role, User>
+	{
+		public SecurityStampValidator(
+			IOptions<SecurityStampValidatorOptions> options,
+			SignInManager signInManager,
+			ISystemClock systemClock,
+			ILoggerFactory loggerFactory,
+			IUnitOfWorkManager unitOfWorkManager)
+			: base(options, signInManager, systemClock, loggerFactory, unitOfWorkManager)
+		{
+		}
+	}
 }

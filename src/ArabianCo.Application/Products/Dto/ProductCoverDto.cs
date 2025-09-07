@@ -2,7 +2,7 @@
 
 namespace ArabianCo.Products.Dto;
 
-public class ProductCoverDto:LiteAttachmentDto
+public class ProductCoverDto : LiteAttachmentDto
 {
-    public string Color { get; set; }
+	public string Color { get; set; }
 }

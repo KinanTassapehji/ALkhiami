@@ -8,11 +8,11 @@ namespace ArabianCo.Users
 {
 	internal interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedUserResultRequestDto, CreateUserDto, UpdateUserDto>
 	{
-        Task DeActivate(EntityDto<long> user);
-        Task Activate(EntityDto<long> user);
-        Task<ListResultDto<RoleDto>> GetRoles();
-        Task ChangeLanguage(ChangeUserLanguageDto input);
+		Task DeActivate(EntityDto<long> user);
+		Task Activate(EntityDto<long> user);
+		Task<ListResultDto<RoleDto>> GetRoles();
+		Task ChangeLanguage(ChangeUserLanguageDto input);
 
-        Task<bool> ChangePassword(ChangePasswordDto input);
-    }
+		Task<bool> ChangePassword(ChangePasswordDto input);
+	}
 }

@@ -5,6 +5,6 @@ namespace ArabianCo.Domain.MaintenanceRequests;
 
 public interface IMaintenanceRequestsManger : IDomainService
 {
-    Task InsertAsync(MaintenanceRequest maintenanceRequest);
-    Task<MaintenanceRequest> GetEntityByIdAsync(int id);
+	Task InsertAsync(MaintenanceRequest maintenanceRequest);
+	Task<MaintenanceRequest> GetEntityByIdAsync(int id);
 }

@@ -3,6 +3,6 @@ using ArabianCo.Questions.Dto;
 
 namespace ArabianCo.Questions;
 
-public interface IQuestionAppService:IArabianCoAsyncCrudAppService<QuestionDto,int,QuestionDto,PagedQuestionResultRequest,CreateQuestionDto,UpdateQuestionDto>
+public interface IQuestionAppService : IArabianCoAsyncCrudAppService<QuestionDto, int, QuestionDto, PagedQuestionResultRequest, CreateQuestionDto, UpdateQuestionDto>
 {
 }

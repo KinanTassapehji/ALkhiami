@@ -3,6 +3,6 @@ using ArabianCo.Products.Dto;
 
 namespace ArabianCo.Products;
 
-public interface IProductAppService:IArabianCoAsyncCrudAppService<ProductDto,int,LiteProductDto,PagedProductResultRequestDto,CreateProductDto,UpdateProductDto>
+public interface IProductAppService : IArabianCoAsyncCrudAppService<ProductDto, int, LiteProductDto, PagedProductResultRequestDto, CreateProductDto, UpdateProductDto>
 {
 }

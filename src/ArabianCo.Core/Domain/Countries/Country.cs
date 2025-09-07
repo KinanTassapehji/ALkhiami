@@ -8,17 +8,17 @@ namespace ArabianCo.Domain.Countries;
 
 public class Country : FullAuditedEntity, IMultiLingualEntity<CountryTranslation>
 {
-    public Country()
-    {
+	public Country()
+	{
 
-        Cities = new HashSet<City>();
-        Translations = new HashSet<CountryTranslation>();
-    }
+		Cities = new HashSet<City>();
+		Translations = new HashSet<CountryTranslation>();
+	}
 
-    public bool IsActive { get; set; }
-    [Required]
-    [StringLength(5)]
-    public string DialCode { get; set; }
-    public virtual ICollection<City> Cities { get; set; }
-    public ICollection<CountryTranslation> Translations { get; set; }
+	public bool IsActive { get; set; }
+	[Required]
+	[StringLength(5)]
+	public string DialCode { get; set; }
+	public virtual ICollection<City> Cities { get; set; }
+	public ICollection<CountryTranslation> Translations { get; set; }
 }

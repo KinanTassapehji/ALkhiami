@@ -6,10 +6,10 @@ namespace ArabianCo.Attributes.Mapper;
 
 internal class AttributeMapProfile : Profile
 {
-    public AttributeMapProfile()
-    {
-        CreateMap<CreateAttributeDto, Attribute>();
-        CreateMap<UpdateAttributeDto, Attribute>();
-        CreateMap<AttributeTranslationDto, AttributeTranslation>().ReverseMap();
-    }
+	public AttributeMapProfile()
+	{
+		CreateMap<CreateAttributeDto, Attribute>();
+		CreateMap<UpdateAttributeDto, Attribute>();
+		CreateMap<AttributeTranslationDto, AttributeTranslation>().ReverseMap();
+	}
 }

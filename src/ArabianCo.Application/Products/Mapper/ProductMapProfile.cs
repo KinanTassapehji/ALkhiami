@@ -5,14 +5,14 @@ using AutoMapper;
 
 namespace ArabianCo.Products.Mapper;
 
-internal class ProductMapProfile:Profile
+internal class ProductMapProfile : Profile
 {
-    public ProductMapProfile()
-    {
-        CreateMap<CreateProductDto, Product>();
-        CreateMap<UpdateProductDto, Product>();
-        CreateMap<ProductTranslationDto, ProductTranslation>().ReverseMap();
-        CreateMap<CreateAttributeValueDto, AttributeValue>();
-        CreateMap<AttributeValueTranslationDto, AttributeValueTranslation>().ReverseMap();
-    }
+	public ProductMapProfile()
+	{
+		CreateMap<CreateProductDto, Product>();
+		CreateMap<UpdateProductDto, Product>();
+		CreateMap<ProductTranslationDto, ProductTranslation>().ReverseMap();
+		CreateMap<CreateAttributeValueDto, AttributeValue>();
+		CreateMap<AttributeValueTranslationDto, AttributeValueTranslation>().ReverseMap();
+	}
 }

@@ -8,7 +8,7 @@ namespace ArabianCo.Attachments.Dto;
 /// </summary>
 public class PagedAttachmentResultRequestDto : PagedAndSortedResultRequestDto
 {
-    public long RefId { get; set; }
+	public long RefId { get; set; }
 
-    public AttachmentRefType RefType { get; set; }
+	public AttachmentRefType RefType { get; set; }
 }

@@ -2,7 +2,7 @@
 
 namespace ArabianCo.AboutUss.Dto;
 
-public class UpdateAboutUsDto:CreateAboutUsDto, IEntityDto
+public class UpdateAboutUsDto : CreateAboutUsDto, IEntityDto
 {
-    public int Id { get; set; }
+	public int Id { get; set; }
 }

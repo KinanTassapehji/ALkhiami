@@ -9,83 +9,83 @@ namespace ArabianCo.CrudAppServiceBase;
 
 public abstract class ArabianCoAsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TLiteEntityDto, TGetAllInput, TCreateInput, TUpdateInput>
   : ArabianCoCrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TLiteEntityDto, TGetAllInput, TCreateInput, TUpdateInput>,
-      IArabianCoAsyncCrudAppService<TEntityDto, TPrimaryKey, TLiteEntityDto, TGetAllInput, TCreateInput, TUpdateInput>
+	  IArabianCoAsyncCrudAppService<TEntityDto, TPrimaryKey, TLiteEntityDto, TGetAllInput, TCreateInput, TUpdateInput>
   where TEntity : class, IEntity<TPrimaryKey>
   where TEntityDto : IEntityDto<TPrimaryKey>
   where TLiteEntityDto : IEntityDto<TPrimaryKey>
   where TUpdateInput : IEntityDto<TPrimaryKey>
 {
-    public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+	public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
-    protected ArabianCoAsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
-        : base(repository)
-    {
-        AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
-        LocalizationSourceName = ArabianCoConsts.LocalizationSourceName;
-    }
+	protected ArabianCoAsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
+		: base(repository)
+	{
+		AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
+		LocalizationSourceName = ArabianCoConsts.LocalizationSourceName;
+	}
 
-    public virtual async Task<TEntityDto> GetAsync(EntityDto<TPrimaryKey> input)
-    {
-        CheckGetPermission();
+	public virtual async Task<TEntityDto> GetAsync(EntityDto<TPrimaryKey> input)
+	{
+		CheckGetPermission();
 
-        var entity = await GetEntityByIdAsync(input.Id);
-        return MapToEntityDto(entity);
-    }
+		var entity = await GetEntityByIdAsync(input.Id);
+		return MapToEntityDto(entity);
+	}
 
-    public virtual async Task<PagedResultDto<TLiteEntityDto>> GetAllAsync(TGetAllInput input)
-    {
-        CheckGetAllPermission();
+	public virtual async Task<PagedResultDto<TLiteEntityDto>> GetAllAsync(TGetAllInput input)
+	{
+		CheckGetAllPermission();
 
-        var query = CreateFilteredQuery(input);
+		var query = CreateFilteredQuery(input);
 
 
-        var totalCount = await AsyncQueryableExecuter.CountAsync(query);
+		var totalCount = await AsyncQueryableExecuter.CountAsync(query);
 
-        query = ApplySorting(query, input);
-        query = ApplyPaging(query, input);
-        var entities = await AsyncQueryableExecuter.ToListAsync(query);
+		query = ApplySorting(query, input);
+		query = ApplyPaging(query, input);
+		var entities = await AsyncQueryableExecuter.ToListAsync(query);
 
-        return new PagedResultDto<TLiteEntityDto>(
-            totalCount,
-            entities.Select(MapToLiteEntityDto).ToList()
-        );
+		return new PagedResultDto<TLiteEntityDto>(
+			totalCount,
+			entities.Select(MapToLiteEntityDto).ToList()
+		);
 
-    }
-    
-    public virtual async Task<TEntityDto> CreateAsync(TCreateInput input)
-    {
-        CheckCreatePermission();
+	}
 
-        var entity = MapToEntity(input);
+	public virtual async Task<TEntityDto> CreateAsync(TCreateInput input)
+	{
+		CheckCreatePermission();
 
-        await Repository.InsertAsync(entity);
-        await CurrentUnitOfWork.SaveChangesAsync();
+		var entity = MapToEntity(input);
 
-        return MapToEntityDto(entity);
-    }
+		await Repository.InsertAsync(entity);
+		await CurrentUnitOfWork.SaveChangesAsync();
 
-    public virtual async Task<TEntityDto> UpdateAsync(TUpdateInput input)
-    {
-        CheckUpdatePermission();
+		return MapToEntityDto(entity);
+	}
 
-        var entity = await GetEntityByIdAsync(input.Id);
+	public virtual async Task<TEntityDto> UpdateAsync(TUpdateInput input)
+	{
+		CheckUpdatePermission();
 
-        MapToEntity(input, entity);
-        await CurrentUnitOfWork.SaveChangesAsync();
+		var entity = await GetEntityByIdAsync(input.Id);
 
-        return MapToEntityDto(entity);
-    }
+		MapToEntity(input, entity);
+		await CurrentUnitOfWork.SaveChangesAsync();
 
-    public virtual async Task DeleteAsync(EntityDto<TPrimaryKey> input)
-    {
-        CheckDeletePermission();
+		return MapToEntityDto(entity);
+	}
 
-        await Repository.DeleteAsync(input.Id);
-    }
+	public virtual async Task DeleteAsync(EntityDto<TPrimaryKey> input)
+	{
+		CheckDeletePermission();
 
-    protected virtual Task<TEntity> GetEntityByIdAsync(TPrimaryKey id)
-    {
-        return Repository.GetAsync(id);
-    }
+		await Repository.DeleteAsync(input.Id);
+	}
+
+	protected virtual Task<TEntity> GetEntityByIdAsync(TPrimaryKey id)
+	{
+		return Repository.GetAsync(id);
+	}
 
 }

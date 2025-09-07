@@ -2,7 +2,7 @@
 
 namespace ArabianCo.Questions.Dto;
 
-public class UpdateQuestionDto:CreateQuestionDto, IEntityDto
+public class UpdateQuestionDto : CreateQuestionDto, IEntityDto
 {
-    public int Id { get; set; }
+	public int Id { get; set; }
 }

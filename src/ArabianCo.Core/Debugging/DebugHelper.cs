@@ -1,18 +1,18 @@
 ﻿namespace ArabianCo.Debugging
 {
-    public static class DebugHelper
-    {
-        public static bool IsDebug
-        {
-            get
-            {
+	public static class DebugHelper
+	{
+		public static bool IsDebug
+		{
+			get
+			{
 #pragma warning disable
 #if DEBUG
-                return true;
+				return true;
 #endif
-                return false;
+				return false;
 #pragma warning restore
-            }
-        }
-    }
+			}
+		}
+	}
 }

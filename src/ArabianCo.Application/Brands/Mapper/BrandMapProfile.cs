@@ -4,12 +4,12 @@ using AutoMapper;
 
 namespace ArabianCo.Brands.Mapper;
 
-internal class BrandMapProfile:Profile
+internal class BrandMapProfile : Profile
 {
-    public BrandMapProfile()
-    {
-        CreateMap<CreateBrandDto, Brand>();
-        CreateMap<UpdateBrandDto, Brand>();
-        CreateMap<BrandTranslationDto, BrandTranslation>();
-    }
+	public BrandMapProfile()
+	{
+		CreateMap<CreateBrandDto, Brand>();
+		CreateMap<UpdateBrandDto, Brand>();
+		CreateMap<BrandTranslationDto, BrandTranslation>();
+	}
 }

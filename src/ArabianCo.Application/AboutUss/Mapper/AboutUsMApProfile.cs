@@ -4,11 +4,11 @@ using AutoMapper;
 
 namespace ArabianCo.AboutUss.Mapper;
 
-internal class AboutUsMApProfile:Profile
+internal class AboutUsMApProfile : Profile
 {
-    public AboutUsMApProfile()
-    {
-        CreateMap<CreateAboutUsDto, AboutUs>();
-        CreateMap<UpdateAboutUsDto, AboutUs>();
-    }
+	public AboutUsMApProfile()
+	{
+		CreateMap<CreateAboutUsDto, AboutUs>();
+		CreateMap<UpdateAboutUsDto, AboutUs>();
+	}
 }

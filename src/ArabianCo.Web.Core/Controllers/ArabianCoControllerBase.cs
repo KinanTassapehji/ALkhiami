@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ArabianCo.Controllers
 {
-    public abstract class ArabianCoControllerBase: AbpController
-    {
-        protected ArabianCoControllerBase()
-        {
-            LocalizationSourceName = ArabianCoConsts.LocalizationSourceName;
-        }
+	public abstract class ArabianCoControllerBase : AbpController
+	{
+		protected ArabianCoControllerBase()
+		{
+			LocalizationSourceName = ArabianCoConsts.LocalizationSourceName;
+		}
 
-        protected void CheckErrors(IdentityResult identityResult)
-        {
-            identityResult.CheckErrors(LocalizationManager);
-        }
-    }
+		protected void CheckErrors(IdentityResult identityResult)
+		{
+			identityResult.CheckErrors(LocalizationManager);
+		}
+	}
 }

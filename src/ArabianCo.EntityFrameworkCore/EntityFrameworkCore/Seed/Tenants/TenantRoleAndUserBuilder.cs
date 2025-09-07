@@ -12,32 +12,32 @@ using ArabianCo.Authorization.Users;
 
 namespace ArabianCo.EntityFrameworkCore.Seed.Tenants
 {
-    public class TenantRoleAndUserBuilder
-    {
-        private readonly ArabianCoDbContext _context;
-        private readonly int _tenantId;
+	public class TenantRoleAndUserBuilder
+	{
+		private readonly ArabianCoDbContext _context;
+		private readonly int _tenantId;
 
-        public TenantRoleAndUserBuilder(ArabianCoDbContext context, int tenantId)
-        {
-            _context = context;
-            _tenantId = tenantId;
-        }
+		public TenantRoleAndUserBuilder(ArabianCoDbContext context, int tenantId)
+		{
+			_context = context;
+			_tenantId = tenantId;
+		}
 
-        public void Create()
-        {
-            CreateRolesAndUsers();
-        }
+		public void Create()
+		{
+			CreateRolesAndUsers();
+		}
 
-        private void CreateRolesAndUsers()
-        {
-            // Admin role
+		private void CreateRolesAndUsers()
+		{
+			// Admin role
 
-            var adminRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Admin);
-            if (adminRole == null)
-            {
-                adminRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin) { IsStatic = true, IsDefault = false }).Entity;
-                _context.SaveChanges();
-            }
+			var adminRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Admin);
+			if (adminRole == null)
+			{
+				adminRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin) { IsStatic = true, IsDefault = false }).Entity;
+				_context.SaveChanges();
+			}
 
 			// User role
 
@@ -51,49 +51,49 @@ namespace ArabianCo.EntityFrameworkCore.Seed.Tenants
 			// Grant all permissions to admin role
 
 			var grantedPermissions = _context.Permissions.IgnoreQueryFilters()
-                .OfType<RolePermissionSetting>()
-                .Where(p => p.TenantId == _tenantId && p.RoleId == adminRole.Id)
-                .Select(p => p.Name)
-                .ToList();
+				.OfType<RolePermissionSetting>()
+				.Where(p => p.TenantId == _tenantId && p.RoleId == adminRole.Id)
+				.Select(p => p.Name)
+				.ToList();
 
-            var permissions = PermissionFinder
-                .GetAllPermissions(new ArabianCoAuthorizationProvider())
-                .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Tenant) &&
-                            !grantedPermissions.Contains(p.Name))
-                .ToList();
+			var permissions = PermissionFinder
+				.GetAllPermissions(new ArabianCoAuthorizationProvider())
+				.Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Tenant) &&
+							!grantedPermissions.Contains(p.Name))
+				.ToList();
 
-            if (permissions.Any())
-            {
-                _context.Permissions.AddRange(
-                    permissions.Select(permission => new RolePermissionSetting
-                    {
-                        TenantId = _tenantId,
-                        Name = permission.Name,
-                        IsGranted = true,
-                        RoleId = adminRole.Id
-                    })
-                );
-                _context.SaveChanges();
-            }
+			if (permissions.Any())
+			{
+				_context.Permissions.AddRange(
+					permissions.Select(permission => new RolePermissionSetting
+					{
+						TenantId = _tenantId,
+						Name = permission.Name,
+						IsGranted = true,
+						RoleId = adminRole.Id
+					})
+				);
+				_context.SaveChanges();
+			}
 
-            // Admin user
+			// Admin user
 
-            var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
-            if (adminUser == null)
-            {
-                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
-                adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
-                adminUser.IsEmailConfirmed = true;
-                adminUser.IsActive = true;
-                adminUser.PhoneNumber = "0888888888";
+			var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
+			if (adminUser == null)
+			{
+				adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
+				adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
+				adminUser.IsEmailConfirmed = true;
+				adminUser.IsActive = true;
+				adminUser.PhoneNumber = "0888888888";
 
-                _context.Users.Add(adminUser);
-                _context.SaveChanges();
+				_context.Users.Add(adminUser);
+				_context.SaveChanges();
 
-                // Assign Admin role to admin user
-                _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
-                _context.SaveChanges();
-            }
-        }
-    }
+				// Assign Admin role to admin user
+				_context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
+				_context.SaveChanges();
+			}
+		}
+	}
 }

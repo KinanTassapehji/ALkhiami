@@ -4,12 +4,12 @@ using AutoMapper;
 
 namespace ArabianCo.Questions.Mapper;
 
-internal class QuestionMapProfile:Profile
+internal class QuestionMapProfile : Profile
 {
-    public QuestionMapProfile()
-    {
-        CreateMap<CreateQuestionDto, Question>();
-        CreateMap<UpdateQuestionDto, Question>();
-        CreateMap<Question,QuestionDto>();
-    }
+	public QuestionMapProfile()
+	{
+		CreateMap<CreateQuestionDto, Question>();
+		CreateMap<UpdateQuestionDto, Question>();
+		CreateMap<Question, QuestionDto>();
+	}
 }

@@ -1,7 +1,7 @@
 ﻿namespace ArabianCo.Roles.Dto
 {
-    public class GetRolesInput
-    {
-        public string Permission { get; set; }
-    }
+	public class GetRolesInput
+	{
+		public string Permission { get; set; }
+	}
 }

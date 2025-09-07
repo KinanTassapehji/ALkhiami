@@ -6,5 +6,5 @@ namespace ArabianCo.EmailAppService;
 
 public interface IEmailService : IApplicationService
 {
-    Task SendEmailAsync(List<string> emails, string title, string body);
+	Task SendEmailAsync(List<string> emails, string title, string body);
 }

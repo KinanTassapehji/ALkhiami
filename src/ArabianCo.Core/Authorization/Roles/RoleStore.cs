@@ -5,17 +5,17 @@ using ArabianCo.Authorization.Users;
 
 namespace ArabianCo.Authorization.Roles
 {
-    public class RoleStore : AbpRoleStore<Role, User>
-    {
-        public RoleStore(
-            IUnitOfWorkManager unitOfWorkManager,
-            IRepository<Role> roleRepository,
-            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
-            : base(
-                unitOfWorkManager,
-                roleRepository,
-                rolePermissionSettingRepository)
-        {
-        }
-    }
+	public class RoleStore : AbpRoleStore<Role, User>
+	{
+		public RoleStore(
+			IUnitOfWorkManager unitOfWorkManager,
+			IRepository<Role> roleRepository,
+			IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
+			: base(
+				unitOfWorkManager,
+				roleRepository,
+				rolePermissionSettingRepository)
+		{
+		}
+	}
 }

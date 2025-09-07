@@ -8,8 +8,8 @@ namespace ArabianCo.Attachments.Dto;
 [AutoMapFrom(typeof(Attachment))]
 public class LiteAttachmentDto : EntityDto
 {
-    /// <summary>
-    /// </summary>
-    public AttachmentRefType RefType { get; set; }
-    public string Url { get; set; }
+	/// <summary>
+	/// </summary>
+	public AttachmentRefType RefType { get; set; }
+	public string Url { get; set; }
 }

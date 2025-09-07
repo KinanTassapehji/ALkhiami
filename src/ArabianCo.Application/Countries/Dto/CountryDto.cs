@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ArabianCo.Countries.Dto
 {
-    public class CountryDto : EntityDto<int>
-    {
+	public class CountryDto : EntityDto<int>
+	{
 
-        [StringLength(500)]
-        public string Name { get; set; }
-        public bool IsActive { get; set; }
-        [StringLength(5)]
-        public string DialCode { get; set; }
-        public List<CountryTranslationDto> Translations { get; set; }
-    }
+		[StringLength(500)]
+		public string Name { get; set; }
+		public bool IsActive { get; set; }
+		[StringLength(5)]
+		public string DialCode { get; set; }
+		public List<CountryTranslationDto> Translations { get; set; }
+	}
 }

@@ -7,41 +7,41 @@ using Abp.Net.Mail;
 
 namespace ArabianCo.EntityFrameworkCore.Seed.Host
 {
-    public class DefaultSettingsCreator
-    {
-        private readonly ArabianCoDbContext _context;
+	public class DefaultSettingsCreator
+	{
+		private readonly ArabianCoDbContext _context;
 
-        public DefaultSettingsCreator(ArabianCoDbContext context)
-        {
-            _context = context;
-        }
+		public DefaultSettingsCreator(ArabianCoDbContext context)
+		{
+			_context = context;
+		}
 
-        public void Create()
-        {
-            int? tenantId = null;
+		public void Create()
+		{
+			int? tenantId = null;
 
-            if (ArabianCoConsts.MultiTenancyEnabled == false)
-            {
-                tenantId = MultiTenancyConsts.DefaultTenantId;
-            }
+			if (ArabianCoConsts.MultiTenancyEnabled == false)
+			{
+				tenantId = MultiTenancyConsts.DefaultTenantId;
+			}
 
-            // Emailing
-            AddSettingIfNotExists(EmailSettingNames.DefaultFromAddress, "admin@mydomain.com", tenantId);
-            AddSettingIfNotExists(EmailSettingNames.DefaultFromDisplayName, "mydomain.com mailer", tenantId);
+			// Emailing
+			AddSettingIfNotExists(EmailSettingNames.DefaultFromAddress, "admin@mydomain.com", tenantId);
+			AddSettingIfNotExists(EmailSettingNames.DefaultFromDisplayName, "mydomain.com mailer", tenantId);
 
-            // Languages
-            AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "en", tenantId);
-        }
+			// Languages
+			AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "en", tenantId);
+		}
 
-        private void AddSettingIfNotExists(string name, string value, int? tenantId = null)
-        {
-            if (_context.Settings.IgnoreQueryFilters().Any(s => s.Name == name && s.TenantId == tenantId && s.UserId == null))
-            {
-                return;
-            }
+		private void AddSettingIfNotExists(string name, string value, int? tenantId = null)
+		{
+			if (_context.Settings.IgnoreQueryFilters().Any(s => s.Name == name && s.TenantId == tenantId && s.UserId == null))
+			{
+				return;
+			}
 
-            _context.Settings.Add(new Setting(tenantId, null, name, value));
-            _context.SaveChanges();
-        }
-    }
+			_context.Settings.Add(new Setting(tenantId, null, name, value));
+			_context.SaveChanges();
+		}
+	}
 }

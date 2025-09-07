@@ -6,12 +6,12 @@ namespace ArabianCo.Orders.Mapper;
 
 internal class OrderMapProfile : Profile
 {
-    public OrderMapProfile()
-    {
-        CreateMap<CreateOrderDto, Order>();
-        CreateMap<UpdateOrderDto, Order>();
-        CreateMap<CreateOrderDetailDto, OrderDetail>();
-        CreateMap<OrderDetailDto, OrderDetail>().ReverseMap();
+	public OrderMapProfile()
+	{
+		CreateMap<CreateOrderDto, Order>();
+		CreateMap<UpdateOrderDto, Order>();
+		CreateMap<CreateOrderDetailDto, OrderDetail>();
+		CreateMap<OrderDetailDto, OrderDetail>().ReverseMap();
 		CreateMap<Order, OrderDto>();
 		CreateMap<Order, LiteOrderDto>();
 

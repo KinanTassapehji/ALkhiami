@@ -9,39 +9,39 @@ using ArabianCo.Migrator.DependencyInjection;
 
 namespace ArabianCo.Migrator
 {
-    [DependsOn(typeof(ArabianCoEntityFrameworkModule))]
-    public class ArabianCoMigratorModule : AbpModule
-    {
-        private readonly IConfigurationRoot _appConfiguration;
+	[DependsOn(typeof(ArabianCoEntityFrameworkModule))]
+	public class ArabianCoMigratorModule : AbpModule
+	{
+		private readonly IConfigurationRoot _appConfiguration;
 
-        public ArabianCoMigratorModule(ArabianCoEntityFrameworkModule abpProjectNameEntityFrameworkModule)
-        {
-            abpProjectNameEntityFrameworkModule.SkipDbSeed = true;
+		public ArabianCoMigratorModule(ArabianCoEntityFrameworkModule abpProjectNameEntityFrameworkModule)
+		{
+			abpProjectNameEntityFrameworkModule.SkipDbSeed = true;
 
-            _appConfiguration = AppConfigurations.Get(
-                typeof(ArabianCoMigratorModule).GetAssembly().GetDirectoryPathOrNull()
-            );
-        }
+			_appConfiguration = AppConfigurations.Get(
+				typeof(ArabianCoMigratorModule).GetAssembly().GetDirectoryPathOrNull()
+			);
+		}
 
-        public override void PreInitialize()
-        {
-            Configuration.DefaultNameOrConnectionString = _appConfiguration.GetConnectionString(
-                ArabianCoConsts.ConnectionStringName
-            );
+		public override void PreInitialize()
+		{
+			Configuration.DefaultNameOrConnectionString = _appConfiguration.GetConnectionString(
+				ArabianCoConsts.ConnectionStringName
+			);
 
-            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
-            Configuration.ReplaceService(
-                typeof(IEventBus), 
-                () => IocManager.IocContainer.Register(
-                    Component.For<IEventBus>().Instance(NullEventBus.Instance)
-                )
-            );
-        }
+			Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
+			Configuration.ReplaceService(
+				typeof(IEventBus),
+				() => IocManager.IocContainer.Register(
+					Component.For<IEventBus>().Instance(NullEventBus.Instance)
+				)
+			);
+		}
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(ArabianCoMigratorModule).GetAssembly());
-            ServiceCollectionRegistrar.Register(IocManager);
-        }
-    }
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(typeof(ArabianCoMigratorModule).GetAssembly());
+			ServiceCollectionRegistrar.Register(IocManager);
+		}
+	}
 }

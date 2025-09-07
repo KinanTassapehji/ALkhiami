@@ -5,7 +5,7 @@ namespace ArabianCo.FrequentlyQuestionService.Dto;
 
 public class FrequentlyQuestionDetailsDto : EntityDto
 {
-    public string Question { get; set; }
-    public string Answer { get; set; }
-    public List<FrequentlyQuestionTranslationDto> Translations { get; set; }
+	public string Question { get; set; }
+	public string Answer { get; set; }
+	public List<FrequentlyQuestionTranslationDto> Translations { get; set; }
 }

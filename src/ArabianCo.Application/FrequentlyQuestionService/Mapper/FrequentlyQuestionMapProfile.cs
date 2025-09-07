@@ -4,12 +4,12 @@ using AutoMapper;
 
 namespace KeyFinder.FrequentlyQuestionService.Mapper
 {
-    public class FrequentlyQuestionMapProfile : Profile
-    {
-        public FrequentlyQuestionMapProfile()
-        {
-            CreateMap<CreateFrequentlyQuestionDto, FrequentlyQuestion>();
-            //CreateMap<FrequentlyQuestion, FrequentlyQuestionDetailsDto>();
-        }
-    }
+	public class FrequentlyQuestionMapProfile : Profile
+	{
+		public FrequentlyQuestionMapProfile()
+		{
+			CreateMap<CreateFrequentlyQuestionDto, FrequentlyQuestion>();
+			//CreateMap<FrequentlyQuestion, FrequentlyQuestionDetailsDto>();
+		}
+	}
 }

@@ -2,7 +2,7 @@
 
 namespace ArabianCo.AboutUss.Dto;
 
-public class PagedAboutUsResultRequestDto:PagedResultRequestDto
+public class PagedAboutUsResultRequestDto : PagedResultRequestDto
 {
-    public bool? IsActive { get; set; }
+	public bool? IsActive { get; set; }
 }

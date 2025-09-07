@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ArabianCo.FrequentlyQuestionService.Dto;
 
-public class CreateFrequentlyQuestionDto:ICustomValidate
+public class CreateFrequentlyQuestionDto : ICustomValidate
 {
-    [Required]
-    public List<FrequentlyQuestionTranslationDto> Translations { get; set; }
+	[Required]
+	public List<FrequentlyQuestionTranslationDto> Translations { get; set; }
 
-    public void AddValidationErrors(CustomValidationContext context)
-    {
-        if (Translations is null || Translations.Count < 2)
-            context.Results.Add(new ValidationResult("Translations must contain at least two elements"));
-    }
+	public void AddValidationErrors(CustomValidationContext context)
+	{
+		if (Translations is null || Translations.Count < 2)
+			context.Results.Add(new ValidationResult("Translations must contain at least two elements"));
+	}
 }

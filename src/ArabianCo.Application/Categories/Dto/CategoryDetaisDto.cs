@@ -6,11 +6,11 @@ namespace ArabianCo.Categories.Dto;
 
 public class CategoryDetaisDto : EntityDto
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public bool IsParent { get; set; }
-    public List<LiteCategoryDto> SubCategories { get; set; } = new List<LiteCategoryDto>();
-    public List<CategoryTranslationDto> Translations { get; set; }
-    public LiteAttachmentDto Photo { get; set; }
-    public LiteAttachmentDto Icon { get; set; }
+	public string Name { get; set; }
+	public string Description { get; set; }
+	public bool IsParent { get; set; }
+	public List<LiteCategoryDto> SubCategories { get; set; } = new List<LiteCategoryDto>();
+	public List<CategoryTranslationDto> Translations { get; set; }
+	public LiteAttachmentDto Photo { get; set; }
+	public LiteAttachmentDto Icon { get; set; }
 }

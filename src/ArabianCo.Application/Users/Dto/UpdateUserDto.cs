@@ -24,13 +24,13 @@ namespace ArabianCo.Users.Dto
 		public string Surname { get; set; }
 
 		[Required]
-                [EmailAddress]
-                [StringLength(AbpUserBase.MaxEmailAddressLength)]
-                public string EmailAddress { get; set; }
-                [Required]
-                [StringLength(AbpUserBase.MaxPhoneNumberLength)]
-                public string PhoneNumber { get; set; }
-                public bool IsActive { get; set; }
+		[EmailAddress]
+		[StringLength(AbpUserBase.MaxEmailAddressLength)]
+		public string EmailAddress { get; set; }
+		[Required]
+		[StringLength(AbpUserBase.MaxPhoneNumberLength)]
+		public string PhoneNumber { get; set; }
+		public bool IsActive { get; set; }
 
 		public string[] RoleNames { get; set; }
 
@@ -39,12 +39,12 @@ namespace ArabianCo.Users.Dto
 		[DisableAuditing]
 		public string Password { get; set; }
 
-                public void Normalize()
-                {
-                        if (RoleNames == null)
-                        {
-                                RoleNames = new string[0];
-                        }
-                }
-        }
+		public void Normalize()
+		{
+			if (RoleNames == null)
+			{
+				RoleNames = new string[0];
+			}
+		}
+	}
 }

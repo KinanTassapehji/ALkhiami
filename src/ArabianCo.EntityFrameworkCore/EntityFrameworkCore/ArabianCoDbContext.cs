@@ -98,19 +98,19 @@ namespace ArabianCo.EntityFrameworkCore
 
 			// ---- Relationships (define ONCE, no duplicates) ----
 
-                        // Order -> User (many orders per user)
-                        modelBuilder.Entity<Order>()
-                                .HasOne(o => o.User)
-                                .WithMany(u => u.Orders)
-                                .HasForeignKey(o => o.UserId)
-                                .OnDelete(DeleteBehavior.Restrict);
+			// Order -> User (many orders per user)
+			modelBuilder.Entity<Order>()
+					.HasOne(o => o.User)
+					.WithMany(u => u.Orders)
+					.HasForeignKey(o => o.UserId)
+					.OnDelete(DeleteBehavior.Restrict);
 
-                        // Address -> User (many addresses per user)
-                        modelBuilder.Entity<Address>()
-                                .HasOne(a => a.User)
-                                .WithMany(u => u.Addresses)
-                                .HasForeignKey(a => a.UserId)
-                                .OnDelete(DeleteBehavior.Restrict);
+			// Address -> User (many addresses per user)
+			modelBuilder.Entity<Address>()
+					.HasOne(a => a.User)
+					.WithMany(u => u.Addresses)
+					.HasForeignKey(a => a.UserId)
+					.OnDelete(DeleteBehavior.Restrict);
 
 			// OrderDetail -> Order (many details per order)
 			modelBuilder.Entity<OrderDetail>()

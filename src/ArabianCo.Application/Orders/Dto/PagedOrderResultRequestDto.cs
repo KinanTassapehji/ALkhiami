@@ -5,6 +5,6 @@ namespace ArabianCo.Orders.Dto;
 
 public class PagedOrderResultRequestDto : PagedResultRequestDto
 {
-    public long? UserId { get; set; }
-    public OrderStatus? Status { get; set; }
+	public long? UserId { get; set; }
+	public OrderStatus? Status { get; set; }
 }

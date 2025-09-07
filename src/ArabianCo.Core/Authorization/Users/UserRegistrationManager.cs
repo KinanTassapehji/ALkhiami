@@ -14,100 +14,100 @@ using ArabianCo.MultiTenancy;
 
 namespace ArabianCo.Authorization.Users
 {
-    public class UserRegistrationManager : DomainService
-    {
-        public IAbpSession AbpSession { get; set; }
+	public class UserRegistrationManager : DomainService
+	{
+		public IAbpSession AbpSession { get; set; }
 
-        private readonly TenantManager _tenantManager;
-        private readonly UserManager _userManager;
-        private readonly RoleManager _roleManager;
-        private readonly IPasswordHasher<User> _passwordHasher;
+		private readonly TenantManager _tenantManager;
+		private readonly UserManager _userManager;
+		private readonly RoleManager _roleManager;
+		private readonly IPasswordHasher<User> _passwordHasher;
 
-        public UserRegistrationManager(
-            TenantManager tenantManager,
-            UserManager userManager,
-            RoleManager roleManager,
-            IPasswordHasher<User> passwordHasher)
-        {
-            _tenantManager = tenantManager;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _passwordHasher = passwordHasher;
+		public UserRegistrationManager(
+			TenantManager tenantManager,
+			UserManager userManager,
+			RoleManager roleManager,
+			IPasswordHasher<User> passwordHasher)
+		{
+			_tenantManager = tenantManager;
+			_userManager = userManager;
+			_roleManager = roleManager;
+			_passwordHasher = passwordHasher;
 
-            AbpSession = NullAbpSession.Instance;
-        }
+			AbpSession = NullAbpSession.Instance;
+		}
 
-        public async Task<User> RegisterAsync(string name, string surname, string emailAddress, string userName, string plainPassword, bool isEmailConfirmed, string phoneNumber)
-        {
-            CheckForTenant();
+		public async Task<User> RegisterAsync(string name, string surname, string emailAddress, string userName, string plainPassword, bool isEmailConfirmed, string phoneNumber)
+		{
+			CheckForTenant();
 
-            var tenant = await GetActiveTenantAsync();
+			var tenant = await GetActiveTenantAsync();
 
-            var user = new User
-            {
-                TenantId = tenant.Id,
-                Name = name,
-                Surname = surname,
-                EmailAddress = emailAddress,
-                IsActive = true,
-                UserName = userName,
-                PhoneNumber = phoneNumber,
-                IsEmailConfirmed = isEmailConfirmed,
-                Roles = new List<UserRole>()
-            };
+			var user = new User
+			{
+				TenantId = tenant.Id,
+				Name = name,
+				Surname = surname,
+				EmailAddress = emailAddress,
+				IsActive = true,
+				UserName = userName,
+				PhoneNumber = phoneNumber,
+				IsEmailConfirmed = isEmailConfirmed,
+				Roles = new List<UserRole>()
+			};
 
-            user.SetNormalizedNames();
-           
-            foreach (var defaultRole in await _roleManager.Roles.Where(r => r.IsDefault).ToListAsync())
-            {
-                user.Roles.Add(new UserRole(tenant.Id, user.Id, defaultRole.Id));
-            }
+			user.SetNormalizedNames();
 
-            await _userManager.InitializeOptionsAsync(tenant.Id);
+			foreach (var defaultRole in await _roleManager.Roles.Where(r => r.IsDefault).ToListAsync())
+			{
+				user.Roles.Add(new UserRole(tenant.Id, user.Id, defaultRole.Id));
+			}
 
-            CheckErrors(await _userManager.CreateAsync(user, plainPassword));
-            await CurrentUnitOfWork.SaveChangesAsync();
+			await _userManager.InitializeOptionsAsync(tenant.Id);
 
-            return user;
-        }
+			CheckErrors(await _userManager.CreateAsync(user, plainPassword));
+			await CurrentUnitOfWork.SaveChangesAsync();
 
-        private void CheckForTenant()
-        {
-            if (!AbpSession.TenantId.HasValue)
-            {
-                throw new InvalidOperationException("Can not register host users!");
-            }
-        }
+			return user;
+		}
 
-        private async Task<Tenant> GetActiveTenantAsync()
-        {
-            if (!AbpSession.TenantId.HasValue)
-            {
-                return null;
-            }
+		private void CheckForTenant()
+		{
+			if (!AbpSession.TenantId.HasValue)
+			{
+				throw new InvalidOperationException("Can not register host users!");
+			}
+		}
 
-            return await GetActiveTenantAsync(AbpSession.TenantId.Value);
-        }
+		private async Task<Tenant> GetActiveTenantAsync()
+		{
+			if (!AbpSession.TenantId.HasValue)
+			{
+				return null;
+			}
 
-        private async Task<Tenant> GetActiveTenantAsync(int tenantId)
-        {
-            var tenant = await _tenantManager.FindByIdAsync(tenantId);
-            if (tenant == null)
-            {
-                throw new UserFriendlyException(L("UnknownTenantId{0}", tenantId));
-            }
+			return await GetActiveTenantAsync(AbpSession.TenantId.Value);
+		}
 
-            if (!tenant.IsActive)
-            {
-                throw new UserFriendlyException(L("TenantIdIsNotActive{0}", tenantId));
-            }
+		private async Task<Tenant> GetActiveTenantAsync(int tenantId)
+		{
+			var tenant = await _tenantManager.FindByIdAsync(tenantId);
+			if (tenant == null)
+			{
+				throw new UserFriendlyException(L("UnknownTenantId{0}", tenantId));
+			}
 
-            return tenant;
-        }
+			if (!tenant.IsActive)
+			{
+				throw new UserFriendlyException(L("TenantIdIsNotActive{0}", tenantId));
+			}
 
-        protected virtual void CheckErrors(IdentityResult identityResult)
-        {
-            identityResult.CheckErrors(LocalizationManager);
-        }
-    }
+			return tenant;
+		}
+
+		protected virtual void CheckErrors(IdentityResult identityResult)
+		{
+			identityResult.CheckErrors(LocalizationManager);
+		}
+	}
 }

@@ -14,7 +14,7 @@ using static ArabianCo.Enums.Enum;
 
 namespace ArabianCo.Domain.ACInstalls
 {
-	public class ACInstall:FullAuditedEntity
+	public class ACInstall : FullAuditedEntity
 	{
 		[EmailAddress]
 		[StringLength(AbpUserBase.MaxEmailAddressLength)]
@@ -28,11 +28,11 @@ namespace ArabianCo.Domain.ACInstalls
 		public string SerialNumber { get; set; }
 		public string ModelNumber { get; set; }
 		public string Note { get; set; }
-                public MaintenanceRequestsStatus Status { get; set; }
-                [Required]
-                public int AddressId { get; set; }
-                [ForeignKey(nameof(AddressId))]
-                public virtual Address Address { get; set; }
+		public MaintenanceRequestsStatus Status { get; set; }
+		[Required]
+		public int AddressId { get; set; }
+		[ForeignKey(nameof(AddressId))]
+		public virtual Address Address { get; set; }
 		[Required]
 		public int BrandId { get; set; }
 		[ForeignKey(nameof(BrandId))]

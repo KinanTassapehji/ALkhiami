@@ -3,17 +3,17 @@ using Abp.Authorization.Users;
 
 namespace ArabianCo.Models.TokenAuth
 {
-    public class ExternalAuthenticateModel
-    {
-        [Required]
-        [StringLength(UserLogin.MaxLoginProviderLength)]
-        public string AuthProvider { get; set; }
+	public class ExternalAuthenticateModel
+	{
+		[Required]
+		[StringLength(UserLogin.MaxLoginProviderLength)]
+		public string AuthProvider { get; set; }
 
-        [Required]
-        [StringLength(UserLogin.MaxProviderKeyLength)]
-        public string ProviderKey { get; set; }
+		[Required]
+		[StringLength(UserLogin.MaxProviderKeyLength)]
+		public string ProviderKey { get; set; }
 
-        [Required]
-        public string ProviderAccessCode { get; set; }
-    }
+		[Required]
+		public string ProviderAccessCode { get; set; }
+	}
 }

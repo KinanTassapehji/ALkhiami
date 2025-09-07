@@ -1,19 +1,19 @@
 namespace ArabianCo.Authorization.Accounts.Dto
 {
-    public class IsTenantAvailableOutput
-    {
-        public TenantAvailabilityState State { get; set; }
+	public class IsTenantAvailableOutput
+	{
+		public TenantAvailabilityState State { get; set; }
 
-        public int? TenantId { get; set; }
+		public int? TenantId { get; set; }
 
-        public IsTenantAvailableOutput()
-        {
-        }
+		public IsTenantAvailableOutput()
+		{
+		}
 
-        public IsTenantAvailableOutput(TenantAvailabilityState state, int? tenantId = null)
-        {
-            State = state;
-            TenantId = tenantId;
-        }
-    }
+		public IsTenantAvailableOutput(TenantAvailabilityState state, int? tenantId = null)
+		{
+			State = state;
+			TenantId = tenantId;
+		}
+	}
 }

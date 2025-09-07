@@ -2,7 +2,7 @@
 
 namespace ArabianCo.Products.Dto;
 
-public class UpdateProductDto:CreateProductDto, IEntityDto
+public class UpdateProductDto : CreateProductDto, IEntityDto
 {
-    public int Id { get; set; }
+	public int Id { get; set; }
 }

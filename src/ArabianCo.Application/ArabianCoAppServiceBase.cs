@@ -9,39 +9,39 @@ using ArabianCo.MultiTenancy;
 
 namespace ArabianCo
 {
-    /// <summary>
-    /// Derive your application services from this class.
-    /// </summary>
-    public abstract class ArabianCoAppServiceBase : ApplicationService
-    {
-        public TenantManager TenantManager { get; set; }
+	/// <summary>
+	/// Derive your application services from this class.
+	/// </summary>
+	public abstract class ArabianCoAppServiceBase : ApplicationService
+	{
+		public TenantManager TenantManager { get; set; }
 
-        public UserManager UserManager { get; set; }
+		public UserManager UserManager { get; set; }
 
-        protected ArabianCoAppServiceBase()
-        {
-            LocalizationSourceName = ArabianCoConsts.LocalizationSourceName;
-        }
+		protected ArabianCoAppServiceBase()
+		{
+			LocalizationSourceName = ArabianCoConsts.LocalizationSourceName;
+		}
 
-        protected virtual async Task<User> GetCurrentUserAsync()
-        {
-            var user = await UserManager.FindByIdAsync(AbpSession.GetUserId().ToString());
-            if (user == null)
-            {
-                throw new Exception("There is no current user!");
-            }
+		protected virtual async Task<User> GetCurrentUserAsync()
+		{
+			var user = await UserManager.FindByIdAsync(AbpSession.GetUserId().ToString());
+			if (user == null)
+			{
+				throw new Exception("There is no current user!");
+			}
 
-            return user;
-        }
+			return user;
+		}
 
-        protected virtual Task<Tenant> GetCurrentTenantAsync()
-        {
-            return TenantManager.GetByIdAsync(AbpSession.GetTenantId());
-        }
+		protected virtual Task<Tenant> GetCurrentTenantAsync()
+		{
+			return TenantManager.GetByIdAsync(AbpSession.GetTenantId());
+		}
 
-        protected virtual void CheckErrors(IdentityResult identityResult)
-        {
-            identityResult.CheckErrors(LocalizationManager);
-        }
-    }
+		protected virtual void CheckErrors(IdentityResult identityResult)
+		{
+			identityResult.CheckErrors(LocalizationManager);
+		}
+	}
 }

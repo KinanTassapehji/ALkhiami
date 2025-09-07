@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace ArabianCo.Brands.Dto;
 
-public class BrandDto:EntityDto
+public class BrandDto : EntityDto
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public List<BrandTranslationDto> Translations { get; set; }
-    public LiteAttachmentDto Photo { get; set; }
+	public string Name { get; set; }
+	public string Description { get; set; }
+	public List<BrandTranslationDto> Translations { get; set; }
+	public LiteAttachmentDto Photo { get; set; }
 }

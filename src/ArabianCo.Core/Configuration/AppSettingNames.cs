@@ -1,8 +1,8 @@
 ﻿namespace ArabianCo.Configuration
 {
-    public static class AppSettingNames
-    {
-        public const string UiTheme = "App.UiTheme";
-        public const string MaxFileSize = "App.MaxFileSize";
-    }
+	public static class AppSettingNames
+	{
+		public const string UiTheme = "App.UiTheme";
+		public const string MaxFileSize = "App.MaxFileSize";
+	}
 }

@@ -15,11 +15,11 @@ namespace ArabianCo.Authorization.Users
 		public static string CreateRandomPassword()
 			=> Guid.NewGuid().ToString("N").Truncate(16);
 
-                // User's addresses
-                public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
+		// User's addresses
+		public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
-                // Navigation: a user can have many orders
-                public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+		// Navigation: a user can have many orders
+		public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
 		// (Optional, existing template method – safe to keep even if not using tenants)
 		public static User CreateTenantAdminUser(int tenantId, string emailAddress)

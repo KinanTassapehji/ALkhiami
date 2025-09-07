@@ -6,14 +6,14 @@ namespace ArabianCo.Domain.Categories;
 
 public interface ICategoryManger : IDomainService
 {
-    Task<Category> GetEntityByIdAsync(int id);
-    Task<bool> CheckIfCategoryIsExist(List<CategoryTranslation> translations);
-    Task<Category> GetLiteEntityByIdAsync(int id);
-    Task InsertAsync(Category entity);
-    Task<int> InsertAndGetIdAsync(Category entity);
-    Task UpdateAsync(Category entity);
-    Task<List<Category>> GetAllByListIdsAsync(List<int> ids);
-    Task DeleteAsync(int id);
-    Task<List<Category>> GetSubCategoriesByParentCategoryId(int parentCategoryId);
-    Task<List<Category>> GetCategoriesForProductAndAttribute();
+	Task<Category> GetEntityByIdAsync(int id);
+	Task<bool> CheckIfCategoryIsExist(List<CategoryTranslation> translations);
+	Task<Category> GetLiteEntityByIdAsync(int id);
+	Task InsertAsync(Category entity);
+	Task<int> InsertAndGetIdAsync(Category entity);
+	Task UpdateAsync(Category entity);
+	Task<List<Category>> GetAllByListIdsAsync(List<int> ids);
+	Task DeleteAsync(int id);
+	Task<List<Category>> GetSubCategoriesByParentCategoryId(int parentCategoryId);
+	Task<List<Category>> GetCategoriesForProductAndAttribute();
 }

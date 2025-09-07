@@ -10,15 +10,15 @@ public interface IArabianCoAsyncCrudAppService<TDetailsEntityDto, TPrimaryKey, T
    where TLiteEntityDto : IEntityDto<TPrimaryKey>
    where TUpdateInput : IEntityDto<TPrimaryKey>
 {
-    Task<TDetailsEntityDto> GetAsync(EntityDto<TPrimaryKey> input);
+	Task<TDetailsEntityDto> GetAsync(EntityDto<TPrimaryKey> input);
 
-    Task<PagedResultDto<TLiteEntityDto>> GetAllAsync(TGetAllInput input);
+	Task<PagedResultDto<TLiteEntityDto>> GetAllAsync(TGetAllInput input);
 
-    Task<TDetailsEntityDto> CreateAsync(TCreateInput input);
+	Task<TDetailsEntityDto> CreateAsync(TCreateInput input);
 
-    Task<TDetailsEntityDto> UpdateAsync(TUpdateInput input);
+	Task<TDetailsEntityDto> UpdateAsync(TUpdateInput input);
 
-    Task DeleteAsync(EntityDto<TPrimaryKey> input);
+	Task DeleteAsync(EntityDto<TPrimaryKey> input);
 
 
 

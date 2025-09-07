@@ -5,19 +5,19 @@ using Microsoft.Extensions.Hosting;
 
 namespace ArabianCo.Web.Host.Startup
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+	public class Program
+	{
+		public static void Main(string[] args)
+		{
+			CreateHostBuilder(args).Build().Run();
+		}
 
-        internal static IHostBuilder CreateHostBuilder(string[] args) =>
-            Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                })
-                .UseCastleWindsor(IocManager.Instance.IocContainer);
-    }
+		internal static IHostBuilder CreateHostBuilder(string[] args) =>
+			Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+				.ConfigureWebHostDefaults(webBuilder =>
+				{
+					webBuilder.UseStartup<Startup>();
+				})
+				.UseCastleWindsor(IocManager.Instance.IocContainer);
+	}
 }

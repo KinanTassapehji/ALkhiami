@@ -6,6 +6,6 @@ namespace ArabianCo.Domain.FrequentlyQuestions;
 
 public class FrequentlyQuestion : FullAuditedEntity, IMultiLingualEntity<FrequentlyQuestionTranslation>
 {
-    public ICollection<FrequentlyQuestionTranslation> Translations { get; set; }
-    public bool IsActive { get; set; }
+	public ICollection<FrequentlyQuestionTranslation> Translations { get; set; }
+	public bool IsActive { get; set; }
 }

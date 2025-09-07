@@ -7,5 +7,5 @@ namespace ArabianCo.Categories;
 
 public interface ICategoryAppService : IArabianCoAsyncCrudAppService<CategoryDetaisDto, int, LiteCategoryDto, PagedCategoryResultRequestDto, CreateCategoryDto, UpdateCategoryDto>
 {
-    Task<List<IndexDto>> GetCategoriesForProductAndAttribute();
+	Task<List<IndexDto>> GetCategoriesForProductAndAttribute();
 }

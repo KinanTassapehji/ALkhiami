@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArabianCo.Domain.ACInstalls
 {
-	internal class ACInstallManager:DomainService, IACInstallManager
+	internal class ACInstallManager : DomainService, IACInstallManager
 	{
 		private readonly IRepository<ACInstall> _repository;
 
@@ -19,11 +19,11 @@ namespace ArabianCo.Domain.ACInstalls
 
 		public async Task<ACInstall> GetEntityByIdAsync(int id)
 		{
-                        var entity = await _repository.GetAll().Where(x => x.Id == id)
-                                .Include(x => x.Brand)
-                                .Include(x => x.Category)
-                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Translations)
-                                .Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Country).ThenInclude(c => c.Translations).FirstOrDefaultAsync();
+			var entity = await _repository.GetAll().Where(x => x.Id == id)
+					.Include(x => x.Brand)
+					.Include(x => x.Category)
+					.Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Translations)
+					.Include(x => x.Address).ThenInclude(a => a.City).ThenInclude(c => c.Country).ThenInclude(c => c.Translations).FirstOrDefaultAsync();
 			if (entity == null)
 				throw new EntityNotFoundException(typeof(ACInstall), id);
 			return entity;

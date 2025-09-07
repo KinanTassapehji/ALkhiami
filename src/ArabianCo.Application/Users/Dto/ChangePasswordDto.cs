@@ -2,12 +2,12 @@
 
 namespace ArabianCo.Users.Dto
 {
-    public class ChangePasswordDto
-    {
-        [Required]
-        public string CurrentPassword { get; set; }
+	public class ChangePasswordDto
+	{
+		[Required]
+		public string CurrentPassword { get; set; }
 
-        [Required]
-        public string NewPassword { get; set; }
-    }
+		[Required]
+		public string NewPassword { get; set; }
+	}
 }
