@@ -1,4 +1,5 @@
 using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using ArabianCo.Addresses.Dto;
@@ -21,7 +22,7 @@ namespace ArabianCo.Addresses
 			return Repository.GetAll()
 				.WhereIf(input.UserId.HasValue, a => a.UserId == input.UserId);
 		}
-
+		[AbpAllowAnonymous]
 		public override async Task<AddressDto> CreateAsync(CreateAddressDto input)
 		{
 			if (!input.UserId.HasValue && AbpSession.UserId.HasValue)
@@ -36,7 +37,7 @@ namespace ArabianCo.Addresses
 		{
 			return await base.UpdateAsync(input);
 		}
-
+		[AbpAuthorize]
 		public async Task<ListResultDto<AddressDto>> GetByUserId(long? userId)
 		{
 			var addresses = await Repository.GetAllListAsync(a => a.UserId == userId);

@@ -25,6 +25,7 @@ public class BrandAppService : ArabianCoAsyncCrudAppService<Brand, BrandDto, int
 		_brandManger = brandManger;
 		_attachmentManager = attachmentManager;
 	}
+	[AbpAllowAnonymous]
 	public override async Task<PagedResultDto<LiteBrandDto>> GetAllAsync(PagedBrandResultRequestDto input)
 	{
 		var result = await base.GetAllAsync(input);
@@ -43,6 +44,7 @@ public class BrandAppService : ArabianCoAsyncCrudAppService<Brand, BrandDto, int
 		}
 		return result;
 	}
+	[AbpAuthorize]
 	public override async Task<BrandDto> CreateAsync(CreateBrandDto input)
 	{
 		var translation = ObjectMapper.Map<List<BrandTranslation>>(input.Translations);
@@ -54,6 +56,7 @@ public class BrandAppService : ArabianCoAsyncCrudAppService<Brand, BrandDto, int
 		await _attachmentManager.CheckAndUpdateRefIdAsync(input.AttachmentId, Enums.Enum.AttachmentRefType.Brand, id);
 		return MapToEntityDto(entity);
 	}
+	[AbpAllowAnonymous]
 	public override async Task<BrandDto> GetAsync(EntityDto<int> input)
 	{
 		var entity = await _brandManger.GetEntityByIdAsync(input.Id);
@@ -70,6 +73,7 @@ public class BrandAppService : ArabianCoAsyncCrudAppService<Brand, BrandDto, int
 		}
 		return entityDto;
 	}
+	[AbpAuthorize]
 	public override async Task DeleteAsync(EntityDto<int> input)
 	{
 		var entity = await _brandManger.GetEntityByIdAsync(input.Id);
@@ -84,6 +88,7 @@ public class BrandAppService : ArabianCoAsyncCrudAppService<Brand, BrandDto, int
 		await CurrentUnitOfWork.SaveChangesAsync();
 		await Repository.DeleteAsync(entity);
 	}
+	[AbpAuthorize]
 	public override async Task<BrandDto> UpdateAsync(UpdateBrandDto input)
 	{
 		var entity = await _brandManger.GetEntityByIdAsync(input.Id);

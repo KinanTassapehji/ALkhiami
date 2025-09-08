@@ -126,7 +126,7 @@ namespace ArabianCo.ACInstalls
 			//}
 			return await GetAsync(new EntityDto<int>(entity.Id));
 		}
-		[AbpAllowAnonymous]
+		[AbpAuthorize]
 		public override async Task<ACInstallDto> GetAsync(EntityDto<int> input)
 		{
 			var entity = await Repository.GetAll()
@@ -159,7 +159,7 @@ namespace ArabianCo.ACInstalls
 
 			return result;
 		}
-		[AbpAllowAnonymous]
+		[AbpAuthorize]
 		public override async Task<PagedResultDto<LiteACInstallDto>> GetAllAsync(PagedACInstallResultDto input)
 		{
 			var result = await base.GetAllAsync(input);
@@ -180,10 +180,12 @@ namespace ArabianCo.ACInstalls
 			return dto;
 		}
 		[ApiExplorerSettings(IgnoreApi = true)]
+		[AbpAuthorize]
 		public override Task<ACInstallDto> UpdateAsync(UpdateACInstallDto input)
 		{
 			return base.UpdateAsync(input);
 		}
+		[AbpAuthorize]
 		public override async Task DeleteAsync(EntityDto<int> input)
 		{
 			await _attachmentManager.DeleteAllRefIdAsync(input.Id, Enums.Enum.AttachmentRefType.ACInstall);

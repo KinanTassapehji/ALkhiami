@@ -121,7 +121,7 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
 
 		return await GetAsync(new EntityDto<int>(entity.Id));
 	}
-	[AbpAllowAnonymous]
+	[AbpAuthorize]
 	public override async Task<MaintenanceRequestDto> GetAsync(EntityDto<int> input)
 	{
 		var entity = await Repository.GetAll()
@@ -154,7 +154,7 @@ public class MaintenanceRequestAppService : ArabianCoAsyncCrudAppService<Mainten
 
 		return result;
 	}
-	[AbpAllowAnonymous]
+	[AbpAuthorize]
 	public override async Task<PagedResultDto<LiteMaintenanceRequestDto>> GetAllAsync(PagedMaintenanceRequestResultDto input)
 	{
 		var result = await base.GetAllAsync(input);

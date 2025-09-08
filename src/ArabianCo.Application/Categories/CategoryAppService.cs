@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using ArabianCo.Categories.Dto;
@@ -25,6 +26,7 @@ public class CategoryAppService : ArabianCoAsyncCrudAppService<Category, Categor
 		_attachmentManager = attachmentManager;
 		_mapper = mapper;
 	}
+	[AbpAuthorize]
 	public override async Task<CategoryDetaisDto> CreateAsync(CreateCategoryDto input)
 	{
 		var entity = ObjectMapper.Map<Category>(input);
@@ -35,6 +37,7 @@ public class CategoryAppService : ArabianCoAsyncCrudAppService<Category, Categor
 			await _attachmentManager.CheckAndUpdateRefIdAsync(input.IconId.Value, Enums.Enum.AttachmentRefType.CategoryIcon, id);
 		return MapToEntityDto(entity);
 	}
+	[AbpAllowAnonymous]
 	public override async Task<PagedResultDto<LiteCategoryDto>> GetAllAsync(PagedCategoryResultRequestDto input)
 	{
 		var result = await base.GetAllAsync(input);
@@ -63,6 +66,7 @@ public class CategoryAppService : ArabianCoAsyncCrudAppService<Category, Categor
 		}
 		return result;
 	}
+	[AbpAllowAnonymous]
 	public override async Task<CategoryDetaisDto> GetAsync(EntityDto<int> input)
 	{
 		var entity = await _categoryManger.GetEntityByIdAsync(input.Id);
@@ -116,6 +120,7 @@ public class CategoryAppService : ArabianCoAsyncCrudAppService<Category, Categor
 		}
 		return result;
 	}
+	[AbpAuthorize]
 	public override async Task<CategoryDetaisDto> UpdateAsync(UpdateCategoryDto input)
 	{
 		var category = await _categoryManger.GetEntityByIdAsync(input.Id);
@@ -140,11 +145,13 @@ public class CategoryAppService : ArabianCoAsyncCrudAppService<Category, Categor
 		await _categoryManger.UpdateAsync(category);
 		return MapToEntityDto(category);
 	}
+	[AbpAuthorize]
 	public override async Task DeleteAsync(EntityDto<int> input)
 	{
 		await _categoryManger.GetEntityByIdAsync(input.Id);
 		await _categoryManger.DeleteAsync(input.Id);
 	}
+	[AbpAllowAnonymous]
 	public async Task<List<IndexDto>> GetCategoriesForProductAndAttribute()
 	{
 		var categories = await _categoryManger.GetCategoriesForProductAndAttribute();
