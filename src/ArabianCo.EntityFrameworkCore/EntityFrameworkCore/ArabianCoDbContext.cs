@@ -23,6 +23,7 @@ using ArabianCo.Domain.ACInstalls;
 using ArabianCo.Domain.Questions;
 using ArabianCo.Domain.AboutUss;
 using ArabianCo.Domain.OurProjects;
+using ArabianCo.Domain.FeedBacks;
 
 namespace ArabianCo.EntityFrameworkCore
 {
@@ -46,6 +47,7 @@ namespace ArabianCo.EntityFrameworkCore
 		public virtual DbSet<Brand> Brands { get; set; }
 		public virtual DbSet<BrandTranslation> BrandTranslations { get; set; }
 		public virtual DbSet<FrequentlyQuestion> FrequentlyQuestions { get; set; }
+		public virtual DbSet<FeedBack> FeedBacks { get; set; }
 		public virtual DbSet<FrequentlyQuestionTranslation> FrequentlyQuestionTranslations { get; set; }
 		public virtual DbSet<Domain.Attributes.Attribute> Attributes { get; set; }  // avoid clash with System.Attribute
 		public virtual DbSet<AttributeTranslation> AttributeTranslations { get; set; }
