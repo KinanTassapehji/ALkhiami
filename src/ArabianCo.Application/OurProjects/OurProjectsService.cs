@@ -6,6 +6,8 @@ using ArabianCo.Domain.Attachments;
 using ArabianCo.Domain.OurProjects;
 using ArabianCo.OurProjects.Dto;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -129,10 +131,16 @@ namespace ArabianCo.OurProjects
                                 return null;
                         }
 
-                        var currentLanguage = LocalizationManager?.CurrentLanguage?.Name;
-                        if (!string.IsNullOrWhiteSpace(currentLanguage))
+                        var currentCulture = CultureInfo.CurrentUICulture;
+                        if (currentCulture != null)
                         {
-                                var translation = entity.Translations.FirstOrDefault(t => t.Language == currentLanguage);
+                                var translation = FindTranslation(entity, currentCulture.Name);
+                                if (translation != null)
+                                {
+                                        return translation;
+                                }
+
+                                translation = FindTranslation(entity, currentCulture.TwoLetterISOLanguageName);
                                 if (translation != null)
                                 {
                                         return translation;
@@ -140,6 +148,17 @@ namespace ArabianCo.OurProjects
                         }
 
                         return entity.Translations.FirstOrDefault();
+                }
+
+                private static OurProjectsTranslation FindTranslation(OurProject entity, string language)
+                {
+                        if (string.IsNullOrWhiteSpace(language))
+                        {
+                                return null;
+                        }
+
+                        return entity.Translations.FirstOrDefault(
+                                t => string.Equals(t.Language, language, StringComparison.OrdinalIgnoreCase));
                 }
         }
 }
