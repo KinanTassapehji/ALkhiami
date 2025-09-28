@@ -7,14 +7,14 @@ namespace ArabianCo.OurProjects.Dto
 	[AutoMap(typeof(OurProjectsTranslation))]
 	public class OurProjectsTranslationDto
 	{
-		[Required]
-		public string Language { get; set; }
-		[Required]
-		public string Name { get; set; }
-		[Required]
-		public string System { get; set; }
-		public int? Ton_of_Refrigeration { get; set; }
-		[Required]
-		public string Location { get; set; }
-	}
+                [Required]
+                public string Language { get; set; }
+                [Required]
+                public string Name { get; set; }
+                [Required]
+                public string System { get; set; }
+                [Required]
+                public string Location { get; set; }
+                public string Description { get; set; }
+        }
 }

@@ -10,11 +10,8 @@ namespace ArabianCo.Domain.OurProjects
 		{
 			Translations = new HashSet<OurProjectsTranslation>();
 		}
-		public ICollection<OurProjectsTranslation> Translations { get; set; }
-		public string Name { get; set; }
-		public string System { get; set; }
-		public int? Ton_of_Refrigeration { get; set; }
-		public string Location { get; set; }
+                public ICollection<OurProjectsTranslation> Translations { get; set; }
+                public int? Ton_of_Refrigeration { get; set; }
 
-	}
+        }
 }
