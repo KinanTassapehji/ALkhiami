@@ -5,6 +5,8 @@ using ArabianCo.CrudAppServiceBase;
 using ArabianCo.Domain.Attachments;
 using ArabianCo.Domain.OurProjects;
 using ArabianCo.OurProjects.Dto;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ArabianCo.OurProjects
@@ -59,11 +61,11 @@ namespace ArabianCo.OurProjects
 			var entityDto = await base.UpdateAsync(input);
 			return entityDto;
 		}
-		public override async Task<OurProjectsDto> GetAsync(EntityDto<int> input)
-		{
-			var entityDto = MapToEntityDto(await _ourProjectsManager.GetEntityByIdAsync(input.Id));
-			var photo = await _attachmentManager.GetByRefAsync(input.Id, Enums.Enum.AttachmentRefType.OurProjects);
-			if (photo != null)
+                public override async Task<OurProjectsDto> GetAsync(EntityDto<int> input)
+                {
+                        var entityDto = MapToEntityDto(await _ourProjectsManager.GetEntityByIdAsync(input.Id));
+                        var photo = await _attachmentManager.GetByRefAsync(input.Id, Enums.Enum.AttachmentRefType.OurProjects);
+                        if (photo != null)
 			{
 				entityDto.Photo = new Attachments.Dto.LiteAttachmentDto
 				{
@@ -71,8 +73,73 @@ namespace ArabianCo.OurProjects
 					RefType = photo.RefType,
 					Url = _attachmentManager.GetUrl(photo)
 				};
-			}
-			return entityDto;
-		}
-	}
+                        }
+                        return entityDto;
+                }
+
+                protected override IQueryable<OurProject> CreateFilteredQuery(PagedOurProjectsResultRequestDto input)
+                {
+                        return base.CreateFilteredQuery(input).Include(x => x.Translations);
+                }
+
+                protected override LiteOurProjectsDto MapToLiteEntityDto(OurProject entity)
+                {
+                        var dto = base.MapToLiteEntityDto(entity);
+                        ApplyLocalizedFields(entity, dto);
+                        return dto;
+                }
+
+                protected override OurProjectsDto MapToEntityDto(OurProject entity)
+                {
+                        var dto = base.MapToEntityDto(entity);
+                        ApplyLocalizedFields(entity, dto);
+                        return dto;
+                }
+
+                private void ApplyLocalizedFields(OurProject entity, LiteOurProjectsDto dto)
+                {
+                        var translation = GetTranslationForCurrentLanguage(entity);
+                        if (translation == null || dto == null)
+                        {
+                                return;
+                        }
+
+                        dto.Name = translation.Name;
+                        dto.System = translation.System;
+                        dto.Location = translation.location;
+                }
+
+                private void ApplyLocalizedFields(OurProject entity, OurProjectsDto dto)
+                {
+                        var translation = GetTranslationForCurrentLanguage(entity);
+                        if (translation == null || dto == null)
+                        {
+                                return;
+                        }
+
+                        dto.Name = translation.Name;
+                        dto.System = translation.System;
+                        dto.Location = translation.location;
+                }
+
+                private OurProjectsTranslation GetTranslationForCurrentLanguage(OurProject entity)
+                {
+                        if (entity?.Translations == null || entity.Translations.Count == 0)
+                        {
+                                return null;
+                        }
+
+                        var currentLanguage = LocalizationManager?.CurrentLanguage?.Name;
+                        if (!string.IsNullOrWhiteSpace(currentLanguage))
+                        {
+                                var translation = entity.Translations.FirstOrDefault(t => t.Language == currentLanguage);
+                                if (translation != null)
+                                {
+                                        return translation;
+                                }
+                        }
+
+                        return entity.Translations.FirstOrDefault();
+                }
+        }
 }
