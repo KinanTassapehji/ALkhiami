@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace ArabianCo.OurProjects
 {
-	public class OurProjectsService : ArabianCoAsyncCrudAppService<OurProject, OurProjectsDto, int, OurProjectsDto, PagedOurProjectsResultRequestDto, CreateOurProjectsDto, UpdateOurProjectsDto>, IOurprojectsService
-	{
+        public class OurProjectsService : ArabianCoAsyncCrudAppService<OurProject, OurProjectsDto, int, LiteOurProjectsDto, PagedOurProjectsResultRequestDto, CreateOurProjectsDto, UpdateOurProjectsDto>, IOurprojectsService
+        {
 		private readonly IOurProjectsManager _ourProjectsManager;
 		private readonly IAttachmentManager _attachmentManager;
 
@@ -28,9 +28,9 @@ namespace ArabianCo.OurProjects
 			await _attachmentManager.UpdateRefIdAsync(photo, entity.Id);
 			return entity;
 		}
-		public override async Task<PagedResultDto<OurProjectsDto>> GetAllAsync(PagedOurProjectsResultRequestDto input)
-		{
-			var result = await base.GetAllAsync(input);
+                public override async Task<PagedResultDto<LiteOurProjectsDto>> GetAllAsync(PagedOurProjectsResultRequestDto input)
+                {
+                        var result = await base.GetAllAsync(input);
 			foreach (var item in result.Items)
 			{
 				var photo = await _attachmentManager.GetByRefAsync(item.Id, Enums.Enum.AttachmentRefType.OurProjects);
