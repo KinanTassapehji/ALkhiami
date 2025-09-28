@@ -2718,15 +2718,6 @@ namespace ArabianCo.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("System")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("Ton_of_Refrigeration")
                         .HasColumnType("int");
 
@@ -2758,9 +2749,6 @@ namespace ArabianCo.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -2774,6 +2762,15 @@ namespace ArabianCo.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("System")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
