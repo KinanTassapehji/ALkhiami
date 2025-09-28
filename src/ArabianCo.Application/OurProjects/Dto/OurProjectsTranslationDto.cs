@@ -13,7 +13,6 @@ namespace ArabianCo.OurProjects.Dto
 		public string Name { get; set; }
 		[Required]
 		public string System { get; set; }
-		public int? Ton_of_Refrigeration { get; set; }
 		[Required]
 		public string Location { get; set; }
 	}
