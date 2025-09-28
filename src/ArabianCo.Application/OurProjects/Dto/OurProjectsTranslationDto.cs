@@ -11,10 +11,9 @@ namespace ArabianCo.OurProjects.Dto
 		public string Language { get; set; }
 		[Required]
 		public string Name { get; set; }
-		[Required]
-		public string System { get; set; }
-		public int? Ton_of_Refrigeration { get; set; }
-		[Required]
-		public string Location { get; set; }
+                [Required]
+                public string System { get; set; }
+                [Required]
+                public string Location { get; set; }
 	}
 }
