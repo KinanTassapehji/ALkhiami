@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ArabianCo.OurProjects
 {
-	public interface IOurprojectsService : IArabianCoAsyncCrudAppService<OurProjectsDto, int, OurProjectsDto, PagedOurProjectsResultRequestDto, CreateOurProjectsDto, UpdateOurProjectsDto>
-	{
-	}
+        public interface IOurprojectsService : IArabianCoAsyncCrudAppService<OurProjectsDto, int, LiteOurProjectsDto, PagedOurProjectsResultRequestDto, CreateOurProjectsDto, UpdateOurProjectsDto>
+        {
+        }
 }

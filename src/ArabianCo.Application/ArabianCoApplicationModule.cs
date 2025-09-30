@@ -17,8 +17,10 @@ using ArabianCo.Domain.Categories;
 using ArabianCo.Domain.Cities;
 using ArabianCo.Domain.Countries;
 using ArabianCo.Domain.FrequentlyQuestions;
+using ArabianCo.Domain.OurProjects;
 using ArabianCo.Domain.Products;
 using ArabianCo.FrequentlyQuestionService.Dto;
+using ArabianCo.OurProjects.Dto;
 using ArabianCo.Products.Dto;
 using AutoMapper;
 
@@ -130,12 +132,23 @@ namespace ArabianCo
 				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
 				configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductDto>(context).TranslationMap
 				.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
-				configuration.CreateMultiLingualMap<AttributeValue, AttributeValueTranslation, AttributValueDto>(context).TranslationMap
-				.ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value));
+                                configuration.CreateMultiLingualMap<AttributeValue, AttributeValueTranslation, AttributValueDto>(context).TranslationMap
+                                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value));
 
-				#endregion
+                                #endregion
 
-			}
-		}
-	}
+                                #region OurProjects
+                                configuration.CreateMultiLingualMap<OurProject, OurProjectsTranslation, LiteOurProjectsDto>(context).TranslationMap
+                                        .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                                        .ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System))
+                                        .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.location));
+                                configuration.CreateMultiLingualMap<OurProject, OurProjectsTranslation, OurProjectsDto>(context).TranslationMap
+                                        .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                                        .ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System))
+                                        .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.location));
+                                #endregion
+
+                        }
+                }
+        }
 }
